@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include "Texture.h"
 
 struct VertexAttribute {
 	unsigned int index;
@@ -19,9 +20,12 @@ protected:
 	unsigned int numberOfElementsPerVertex;
 	unsigned int numberOfVertices;
 	unsigned int vboId;
+	int textureUnit = 0;
 	int primitiveType;
 	std::vector<float> vertexData;
 	std::unordered_map<std::string, VertexAttribute> attributeMap;
+	std::shared_ptr<Texture> texture = nullptr;
+
 
 public:
 	VertexBuffer(unsigned int numElementsPerVertex = 3);
@@ -32,6 +36,11 @@ public:
 	inline unsigned int GetNumberOfVertices() const { return numberOfVertices; }
 	inline int GetPrimitiveType() const { return primitiveType; }
 	inline void SetPrimitiveType(int primitiveType) { this->primitiveType = primitiveType; }
+	inline int GetTextureUnit() const { return textureUnit; }
+	inline void SetTextureUnit(int textureUnit) { this->textureUnit = textureUnit; }
+	void SetTexture(std::shared_ptr<Texture> texture) { this->texture = texture; }
+	std::shared_ptr<Texture> GetTexture() const { return texture; }
+	bool HasTexture() const { return texture != nullptr; }
 
 	// Variadic function
 	void AddVertexData(unsigned int count, ...);
@@ -40,5 +49,6 @@ public:
 		const std::string& name, unsigned int index, 
 		unsigned int numberOfElements, unsigned int offsetCount=0);
 	void SetUpAttributeInterpretration();
+	void SelectTexture();
 };
 

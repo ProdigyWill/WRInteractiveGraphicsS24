@@ -47,15 +47,25 @@ void Texture::SelectToRender(int textureUnit)
 
 void Texture::Allocate()
 {
+    SelectToChange();
+
+    glTexParameteri(type, wrapS, GL_REPEAT);
+    glTexParameteri(type, wrapT, GL_REPEAT);
+    glTexParameteri(type, minFilter, GL_LINEAR);
+    glTexParameteri(type, magFilter, GL_LINEAR);
+
+    glTexImage2D(type, 0, internalFormat, width, height, 0, sourceFormat, GL_UNSIGNED_BYTE, textureData);
+
+    CleanUp();
+
+    glGenerateMipmap(type);
+
+    Deselect();
 }
 
 void Texture::SetTextureData(unsigned int count, unsigned char* data) {
     CleanUp();
-
-    // Allocate memory for textureData based on the count
     textureData = new unsigned char[count];
-
-    memcpy(data, textureData, count);
-
+    memcpy(textureData, data, count);
     isLoadedFromFile = false;
 }

@@ -32,11 +32,20 @@ void VertexBuffer::AddVertexData(unsigned int count, ...)
 	va_end(args);
 }
 
+void VertexBuffer::SelectTexture() {
+	if (HasTexture()) {
+		texture->SelectToRender(textureUnit);
+	}
+}
+
 void VertexBuffer::StaticAllocate()
 {
 	unsigned long long bytesToAllocate = vertexData.size() * sizeof(float);
 	glBufferData(
 		GL_ARRAY_BUFFER, bytesToAllocate, vertexData.data(), GL_STATIC_DRAW);
+	if (HasTexture()) {
+		texture->Allocate();
+	}
 }
 
 void VertexBuffer::AddVertexAttribute(

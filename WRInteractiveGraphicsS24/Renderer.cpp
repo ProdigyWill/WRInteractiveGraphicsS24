@@ -18,6 +18,18 @@ private:
         auto& buffer = object.GetVertexBuffer();
         buffer->Select();
         buffer->SetUpAttributeInterpretration();
+        
+        if (buffer->HasTexture()) {
+            shader->SendIntUniform("texUnit", buffer->GetTextureUnit());
+
+            // Get the texture from the buffer
+            auto texture = buffer->GetTexture();
+            if (texture) {
+                // Select the texture to render
+                texture->SelectToRender(buffer->GetTextureUnit());
+            }
+        }
+        
         glDrawArrays(buffer->GetPrimitiveType(), 0, buffer->GetNumberOfVertices());
 
         // Recursively render the children

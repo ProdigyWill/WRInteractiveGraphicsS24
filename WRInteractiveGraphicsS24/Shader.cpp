@@ -39,6 +39,13 @@ void Shader::SendMat4Uniform(const std::string& uniformName, const glm::mat4& ma
     glUniformMatrix4fv(uniformMap[uniformName], 1, GL_FALSE, glm::value_ptr(mat));
 }
 
+void Shader::SendIntUniform(const std::string& uniformName, int value)
+{
+    glUseProgram(shaderProgram);
+    int uniformLocation = glGetUniformLocation(shaderProgram, uniformName.c_str());
+    glUniform1i(uniformLocation, value);
+}
+
 void Shader::SetDefaultSource()
 {
     vertexSource =
