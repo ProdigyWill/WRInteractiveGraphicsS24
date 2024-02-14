@@ -49,10 +49,10 @@ void Texture::Allocate()
 {
     SelectToChange();
 
-    glTexParameteri(type, wrapS, GL_REPEAT);
-    glTexParameteri(type, wrapT, GL_REPEAT);
-    glTexParameteri(type, minFilter, GL_LINEAR);
-    glTexParameteri(type, magFilter, GL_LINEAR);
+    glTexParameteri(type, GL_TEXTURE_WRAP_S, wrapS);
+    glTexParameteri(type, GL_TEXTURE_WRAP_T, wrapT);
+    glTexParameteri(type, GL_TEXTURE_MIN_FILTER, minFilter);
+    glTexParameteri(type, GL_TEXTURE_MAG_FILTER, magFilter);
 
     glTexImage2D(type, 0, internalFormat, width, height, 0, sourceFormat, GL_UNSIGNED_BYTE, textureData);
 

@@ -22,12 +22,8 @@ private:
         if (buffer->HasTexture()) {
             shader->SendIntUniform("texUnit", buffer->GetTextureUnit());
 
-            // Get the texture from the buffer
-            auto texture = buffer->GetTexture();
-            if (texture) {
-                // Select the texture to render
-                texture->SelectToRender(buffer->GetTextureUnit());
-            }
+            // Select the texture to render
+            buffer->GetTexture()->SelectToRender(buffer->GetTextureUnit());
         }
         
         glDrawArrays(buffer->GetPrimitiveType(), 0, buffer->GetNumberOfVertices());

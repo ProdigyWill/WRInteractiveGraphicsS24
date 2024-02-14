@@ -47,6 +47,16 @@ static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& di
 	return glm::inverse(view);
 }
 
+static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shared_ptr<Scene>& textureScene) {
+	TextFile textureVertexFile("texture.vert.glsl");
+	TextFile textureFragmentFile("texture.frag.glsl");
+
+	std::string vertexSource = textureVertexFile.getData();
+	std::string fragmentSource = textureFragmentFile.getData();
+
+
+}
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
