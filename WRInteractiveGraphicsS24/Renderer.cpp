@@ -1,82 +1,57 @@
-#include "Shader.h"
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include <vector>
-#include "GraphicsObject.h"
-#include "Scene.h"
+#include "Renderer.h"
+#include "glm/glm.hpp";
 
-class Renderer {
-private:
-    std::shared_ptr<Shader> shader;
-    GLuint vaoId;
+Renderer::Renderer(std::shared_ptr<Shader>& shader)
+{
+	this->shader = shader;
+	glGenVertexArrays(1, &this->vaoID);
+}
 
-    void RenderObject(const GraphicsObject& object)
-    {
-        shader->SendMat4Uniform("world", object.GetReferenceFrame());
+void Renderer::AllocateVertexBuffers(const std::vector<std::shared_ptr<GraphicsObject>>& objects)
+{
+	glBindVertexArray(this->vaoID);
+	for (auto& object : objects)
+	{
+		object->StaticAllocateVertexBuffer();
+	}
+	glBindVertexArray(0);
+}
 
-        auto& buffer = object.GetVertexBuffer();
-        buffer->Select();
-        buffer->SetUpAttributeInterpretration();
-        
-        if (buffer->HasTexture()) {
-            shader->SendIntUniform("texUnit", buffer->GetTextureUnit());
+void Renderer::RenderScene(std::shared_ptr<Scene>& scene, glm::mat4& view)
+{
+	if (this->shader->IsCreated()) {
+		glUseProgram(this->shader->GetShaderProgram());
+		glBindVertexArray(this->vaoID);
+		shader->SendMat4Uniform("view", view);
+		// Render the objects in the scene
+		for (auto& object : scene->GetObjects()) {
+			RenderObject(*object);
+		}
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glUseProgram(0);
+		glBindVertexArray(0);
+	}
+}
 
-            // Select the texture to render
-            buffer->GetTexture()->SelectToRender(buffer->GetTextureUnit());
-        }
-        
-        glDrawArrays(buffer->GetPrimitiveType(), 0, buffer->GetNumberOfVertices());
+void Renderer::RenderObject(const GraphicsObject& object)
+{
+	shader->SendMat4Uniform("world", object.GetReferenceFrame());
+	auto& buffer = object.GetVertexBuffer();
+	buffer->Select();
 
-        // Recursively render the children
-        auto& children = object.GetChildren();
-        for (auto& child : children) {
-            RenderObject(*child);
-        }
-    }
+	if (buffer->HasTexture())
+	{
+		shader->SendIntUniform("texUnit", buffer->GetTextureUnit());
+		buffer->GetTexture()->SelectToRender(buffer->GetTextureUnit());
+	}
 
-public:
-    Renderer(const std::shared_ptr<Shader>& shader) : shader(shader) {
-        // Generate VAO
-        glGenVertexArrays(1, &vaoId);
-    }
+	buffer->SetUpAttributeInterpretration();
+	glDrawArrays(buffer->GetPrimitiveType(), 0, buffer->GetNumberOfVertices());
 
-    ~Renderer() {
-        glDeleteVertexArrays(1, &vaoId);
-    }
-
-    void allocateVertexBuffers(const std::vector<std::shared_ptr<GraphicsObject>>& objects) {
-        // Bind VAO before allocating vertex buffers
-        glBindVertexArray(vaoId);
-
-        // static allocation of vertex buffers
-        for (const auto& object : objects) {
-            object->StaticAllocateVertexBuffer();
-        }
-
-        // Unbind VAO after allocating vertex buffers
-        glBindVertexArray(0);
-    }
-
-    void RenderScene(const std::shared_ptr<Scene> scene, const glm::mat4& view) {
-        if (shader->IsCreated()) {
-            glUseProgram(shader->GetShaderProgram());
-            glBindVertexArray(vaoId);
-            shader->SendMat4Uniform("view", view);
-
-            // Get the objects from the scene
-            const std::vector<std::shared_ptr<GraphicsObject>>& objects = scene->GetObjects();
-
-            // Render the objects in the scene
-            for (auto& object : objects) {
-                RenderObject(*object);
-            }
-
-            glDisableVertexAttribArray(0);
-            glDisableVertexAttribArray(1);
-            glUseProgram(0);
-            glBindVertexArray(0);
-        }
-    }
-};
-
+	// Recursively render the children
+	auto& children = object.GetChildren();
+	for (auto& child : children) {
+		RenderObject(*child);
+	}
+}

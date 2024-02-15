@@ -1,31 +1,25 @@
 #pragma once
-#include <string>
-#include <sstream>
-#include <unordered_map>
-#include <glm/glm.hpp>
 #include "BaseObject.h"
-#include <glad/glad.h>
+#include "Shader.h"
 #include "GraphicsObject.h"
 #include "Scene.h"
-#include "Shader.h"
-class Renderer {
+#include <glm/glm.hpp>
+
+class Renderer : public BaseObject
+{
 private:
-    std::shared_ptr<Shader> shader;
-    GLuint vaoId;
+	unsigned int vaoID;
+	std::shared_ptr<Shader> shader;
 
 public:
-    Renderer(std::shared_ptr<Shader>& shader);
+	Renderer(std::shared_ptr<Shader>& shader);
+	~Renderer() = default;
 
-    inline const std::shared_ptr<Shader>& getShader() const {
-        return shader;
-    }
-    Renderer(const std::shared_ptr<Shader>& shader) : shader(shader) {
-        // Generate VAO
-        glGenVertexArrays(1, &vaoId);
-    }
-    ~Renderer();
-    void RenderObject(const GraphicsObject& object);
-    void allocateVertexBuffers(const std::vector<std::shared_ptr<GraphicsObject>>& objects);
-    void RenderScene(const std::shared_ptr<Scene> scene, const glm::mat4& view);
+	inline std::shared_ptr<Shader> GetShader() const { return shader; }
+
+	void AllocateVertexBuffers(const std::vector<std::shared_ptr<GraphicsObject>>& objects);
+	void RenderScene(std::shared_ptr<Scene>& scene, glm::mat4& view);
+
+private:
+	void RenderObject(const GraphicsObject& object);
 };
-

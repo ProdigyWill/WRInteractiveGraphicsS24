@@ -83,7 +83,7 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 	texturedObject->SetVertexBuffer(texturedBuffer);
 	textureScene->AddObject(texturedObject);
 
-	texturedBuffer->AddVertexData(9,
+	texturedBuffer->AddVertexData(
 		8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
 		8, -50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
 		8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
@@ -99,7 +99,7 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 
 	texturedBuffer->SetTexture(sharedTexture);
 	texturedObject->SetVertexBuffer(texturedBuffer);
-	texturedObject->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // Set the position as desired
+	texturedObject->SetPosition(glm::vec3(1.0f, 1.0f, 0.0f)); 
 	textureScene->AddObject(texturedObject);
 }
 
@@ -197,7 +197,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	triangle->AddChild(line);
 
 	Renderer renderer(shader);
-	renderer.allocateVertexBuffers(scene->GetObjects());
+	renderer.AllocateVertexBuffers(scene->GetObjects());
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -222,8 +222,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	SetUpTexturedScene(textureShader, textureScene);
 
 	Renderer textureRenderer(textureShader);
-	textureRenderer.allocateVertexBuffers(textureScene->GetObjects());
-	textureRenderer.getShader()->SendMat4Uniform("projection", projection);
+	textureRenderer.AllocateVertexBuffers(textureScene->GetObjects());
+	textureRenderer.GetShader()->SendMat4Uniform("projection", projection);
 	textureRenderer.RenderScene(textureScene, view);
 
 	while (!glfwWindowShouldClose(window)) {

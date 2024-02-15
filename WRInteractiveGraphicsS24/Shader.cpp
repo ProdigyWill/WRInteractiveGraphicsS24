@@ -72,18 +72,6 @@ void Shader::SetDefaultSource()
         "}\n";
 }
 
-//void Shader::SetDefaultSource()
-//{
-//    const std::string vertexFilePath = "basic.vert.glsl";
-//    const std::string fragmentFilePath = "basic.frag.glsl";
-//
-//    TextFile vertexFile(vertexFilePath);
-//    TextFile fragmentFile(fragmentFilePath);
-//
-//    vertexSource = vertexFile.getData();
-//    fragmentSource = fragmentFile.getData();
-//}
-
 void Shader::Init()
 {
 	shaderProgram = 0;
