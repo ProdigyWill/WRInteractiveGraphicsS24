@@ -42,8 +42,8 @@ void Shader::SendMat4Uniform(const std::string& uniformName, const glm::mat4& ma
 void Shader::SendIntUniform(const std::string& uniformName, int value)
 {
     glUseProgram(shaderProgram);
-    int uniformLocation = glGetUniformLocation(shaderProgram, uniformName.c_str());
-    glUniform1i(uniformLocation, value);
+    //int uniformLocation = glGetUniformLocation(shaderProgram, uniformName.c_str());
+    glUniform1i(uniformMap[uniformName], value);
 }
 
 void Shader::SetDefaultSource()

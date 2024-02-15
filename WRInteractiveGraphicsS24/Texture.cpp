@@ -14,9 +14,9 @@ void Texture::CleanUp()
 {
 	if (textureData == nullptr) { return; }
 	if (!isLoadedFromFile) { 
-		delete[] textureData;
-		textureData = nullptr;
+		delete[] textureData;	
 	}
+    textureData = nullptr;
 }
 
 void Texture::SetWidth(int width)

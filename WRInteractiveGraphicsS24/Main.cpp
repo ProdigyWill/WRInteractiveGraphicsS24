@@ -51,10 +51,7 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 	TextFile textureVertexFile("texture.vert.glsl");
 	TextFile textureFragmentFile("texture.frag.glsl");
 
-	std::string vertexSource = textureVertexFile.getData();
-	std::string fragmentSource = textureFragmentFile.getData();
-
-	textureShader = std::make_shared<Shader>(vertexSource, fragmentSource);
+	textureShader = std::make_shared<Shader>(textureVertexFile.getData(), textureFragmentFile.getData());
 	textureShader->AddUniform("projection");
 	textureShader->AddUniform("world");
 	textureShader->AddUniform("view");
@@ -66,31 +63,23 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 	sharedTexture->setHeight(4);
 
 	unsigned char textureData[] = {
-		255, 255, 255, 255, 0, 0, 255, 255,
-		0, 0, 255, 255, 255, 255, 255, 255,
-		0, 255, 0, 255, 255, 255, 255, 255,
-		255, 255, 0, 255, 0, 255, 0, 255,
-		255, 255, 255, 255, 255, 255, 0, 0,
-		255, 255, 0, 0, 255, 255, 255, 255,
-		255, 255, 255, 255, 0, 255, 0, 255,
-		255, 255, 255, 255, 255, 255, 0, 0
+		255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255,
+		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+		255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255
 	};
 
-	sharedTexture->SetTextureData(sizeof(textureData), textureData);
+	sharedTexture->SetTextureData(64, textureData);
 	textureScene = std::make_shared<Scene>();
 	std::shared_ptr<GraphicsObject> texturedObject = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> texturedBuffer = std::make_shared<VertexBuffer>(8);
-	texturedObject->SetVertexBuffer(texturedBuffer);
-	textureScene->AddObject(texturedObject);
 
-	texturedBuffer->AddVertexData(
-		8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-		8, -50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-		8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-		8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-		8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-		8, 50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f
-	);
+	texturedBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 
 	texturedBuffer->AddVertexAttribute("position", 0, 3, 0);
 	texturedBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
@@ -99,7 +88,7 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 
 	texturedBuffer->SetTexture(sharedTexture);
 	texturedObject->SetVertexBuffer(texturedBuffer);
-	texturedObject->SetPosition(glm::vec3(1.0f, 1.0f, 0.0f)); 
+	texturedObject->SetPosition(glm::vec3(-75.0f, 0.0f, 0.0f)); 
 	textureScene->AddObject(texturedObject);
 }
 
@@ -151,10 +140,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	glfwGetWindowSize(window, &width, &height);
 	float aspectRatio = width / (height * 1.0f);
 
-	float left = -50.0f;
-	float right = 50.0f;
-	float bottom = -50.0f;
-	float top = 50.0f;
+	float left = -100.0f;
+	float right = 100.0f;
+	float bottom = -100.0f;
+	float top = 100.0f;
 	left *= aspectRatio;
 	right *= aspectRatio;
 	glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
@@ -224,7 +213,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Renderer textureRenderer(textureShader);
 	textureRenderer.AllocateVertexBuffers(textureScene->GetObjects());
 	textureRenderer.GetShader()->SendMat4Uniform("projection", projection);
-	textureRenderer.RenderScene(textureScene, view);
+	
 
 	while (!glfwWindowShouldClose(window)) {
 		ProcessInput(window);
@@ -250,6 +239,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 		renderer.RenderScene(scene, view);
+		textureRenderer.RenderScene(textureScene, view);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
