@@ -16,7 +16,7 @@
 #include "GraphicsObject.h"
 #include "Scene.h"
 #include "Shader.h"
-#include "Renderer.cpp"
+#include "Renderer.h"
 #include "TextFile.h"
 
 void OnWindowSizeChanged(GLFWwindow* window, int width, int height)
@@ -54,7 +54,53 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 	std::string vertexSource = textureVertexFile.getData();
 	std::string fragmentSource = textureFragmentFile.getData();
 
+	textureShader = std::make_shared<Shader>(vertexSource, fragmentSource);
+	textureShader->AddUniform("projection");
+	textureShader->AddUniform("world");
+	textureShader->AddUniform("view");
+	textureShader->AddUniform("texUnit");
 
+	std::shared_ptr<Texture> sharedTexture = std::make_shared<Texture>();
+
+	sharedTexture->SetWidth(4);
+	sharedTexture->setHeight(4);
+
+	unsigned char textureData[] = {
+		255, 255, 255, 255, 0, 0, 255, 255,
+		0, 0, 255, 255, 255, 255, 255, 255,
+		0, 255, 0, 255, 255, 255, 255, 255,
+		255, 255, 0, 255, 0, 255, 0, 255,
+		255, 255, 255, 255, 255, 255, 0, 0,
+		255, 255, 0, 0, 255, 255, 255, 255,
+		255, 255, 255, 255, 0, 255, 0, 255,
+		255, 255, 255, 255, 255, 255, 0, 0
+	};
+
+	sharedTexture->SetTextureData(sizeof(textureData), textureData);
+	textureScene = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> texturedObject = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> texturedBuffer = std::make_shared<VertexBuffer>(8);
+	texturedObject->SetVertexBuffer(texturedBuffer);
+	textureScene->AddObject(texturedObject);
+
+	texturedBuffer->AddVertexData(9,
+		8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+		8, -50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+		8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+		8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+		8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+		8, 50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f
+	);
+
+	texturedBuffer->AddVertexAttribute("position", 0, 3, 0);
+	texturedBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
+	texturedBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
+
+
+	texturedBuffer->SetTexture(sharedTexture);
+	texturedObject->SetVertexBuffer(texturedBuffer);
+	texturedObject->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // Set the position as desired
+	textureScene->AddObject(texturedObject);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -169,6 +215,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	float angle = 0, childAngle = 0;
 	float cameraX = -10, cameraY = 0;
 	glm::mat4 view;
+
+	std::shared_ptr<Shader> textureShader;
+	std::shared_ptr<Scene> textureScene;
+
+	SetUpTexturedScene(textureShader, textureScene);
+
+	Renderer textureRenderer(textureShader);
+	textureRenderer.allocateVertexBuffers(textureScene->GetObjects());
+	textureRenderer.getShader()->SendMat4Uniform("projection", projection);
+	textureRenderer.RenderScene(textureScene, view);
 
 	while (!glfwWindowShouldClose(window)) {
 		ProcessInput(window);
