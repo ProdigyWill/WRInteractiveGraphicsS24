@@ -157,6 +157,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="TextFile.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VertexBuffer.h" />
@@ -164,6 +165,9 @@
   <ItemGroup>
     <None Include="texture.frag.glsl" />
     <None Include="texture.vert.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="planet05.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

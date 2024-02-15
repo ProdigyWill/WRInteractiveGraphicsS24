@@ -88,8 +88,31 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 
 	texturedBuffer->SetTexture(sharedTexture);
 	texturedObject->SetVertexBuffer(texturedBuffer);
-	texturedObject->SetPosition(glm::vec3(-75.0f, 0.0f, 0.0f)); 
+	texturedObject->SetPosition(glm::vec3(-75.0f, -25.0f, 0.0f)); 
 	textureScene->AddObject(texturedObject);
+
+
+	//Second Object
+	std::shared_ptr<GraphicsObject> texturedObject2 = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> texturedBuffer2 = std::make_shared<VertexBuffer>(8);
+	std::shared_ptr<Texture> sharedTexture2 = std::make_shared<Texture>();
+
+	texturedBuffer2->AddVertexData(8, -25.0f, 25.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer2->AddVertexData(8, -25.0f, -25.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	texturedBuffer2->AddVertexData(8, 25.0f, -25.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer2->AddVertexData(8, -25.0f, 25.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer2->AddVertexData(8, 25.0f, -25.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer2->AddVertexData(8, 25.0f, 25.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	texturedBuffer2->AddVertexAttribute("position", 0, 3, 0);
+	texturedBuffer2->AddVertexAttribute("vertexColor", 1, 3, 3);
+	texturedBuffer2->AddVertexAttribute("texCoord", 2, 2, 6);
+
+	sharedTexture2->LoadTextureDataFromFile("planet05.png"); 
+	texturedBuffer2->SetTexture(sharedTexture2);
+	texturedObject2->SetVertexBuffer(texturedBuffer2);
+	texturedObject2->SetPosition(glm::vec3(75.0f, 25.0f, 0.0f));
+	textureScene->AddObject(texturedObject2);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -114,6 +137,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+
+	//Alpha Blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glViewport(0, 0, 1200, 800);
 	glfwSetFramebufferSizeCallback(window, OnWindowSizeChanged);

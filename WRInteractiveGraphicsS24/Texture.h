@@ -6,6 +6,7 @@ class Texture : public BaseObject
 private:
 	unsigned char* textureData;
 	unsigned int textureId;
+	int numberOfChannels = 4;
 	unsigned int type = GL_TEXTURE_2D, 
 		width = 0, 
 		height = 0, 
@@ -22,6 +23,7 @@ public:
 	~Texture();
 	inline unsigned char* GetTextureData() const { return textureData; }
 	inline unsigned int GetTextureId() const { return textureId; }
+	inline unsigned int GetNumberOfChannels() const { return numberOfChannels; }
 	inline bool IsLoadedFromFile() const { return isLoadedFromFile; }
 	void SetWidth(int width);
 	void setHeight(int height);
@@ -30,6 +32,7 @@ public:
 	void SelectToRender(int textureUnit = 0);
 	void Allocate();
 	void SetTextureData(unsigned int count, unsigned char* data);
+	void LoadTextureDataFromFile(const std::string& filepath);
 private:
 	void CleanUp();
 };

@@ -1,5 +1,8 @@
 #include "Texture.h"
 #include <glad/glad.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 Texture::Texture() {
 	this->textureData = nullptr;
     glGenTextures(1, &textureId);
@@ -16,6 +19,9 @@ void Texture::CleanUp()
 	if (!isLoadedFromFile) { 
 		delete[] textureData;	
 	}
+    else {
+        stbi_image_free(textureData);
+    }
     textureData = nullptr;
 }
 
@@ -68,4 +74,19 @@ void Texture::SetTextureData(unsigned int count, unsigned char* data) {
     textureData = new unsigned char[count];
     memcpy(textureData, data, count);
     isLoadedFromFile = false;
+}
+
+void Texture::LoadTextureDataFromFile(const std::string& filepath)
+{
+    CleanUp();
+    int width, height;
+    stbi_set_flip_vertically_on_load(true);
+    textureData = stbi_load(filepath.c_str(), &width, &height, &numberOfChannels, 0);
+    this->width = width;
+    this->height = height;
+    if (numberOfChannels == 3) {
+        sourceFormat = GL_RGB;
+    }
+    isLoadedFromFile = true;
+
 }

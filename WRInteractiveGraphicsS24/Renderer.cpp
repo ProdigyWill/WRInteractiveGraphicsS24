@@ -1,5 +1,5 @@
 #include "Renderer.h"
-#include "glm/glm.hpp";
+#include "glm/glm.hpp"
 
 Renderer::Renderer(std::shared_ptr<Shader>& shader)
 {

@@ -95,9 +95,17 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="texture.frag.glsl" />
     <None Include="texture.vert.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="planet05.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
