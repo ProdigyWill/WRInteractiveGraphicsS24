@@ -39,6 +39,13 @@ void Shader::SendMat4Uniform(const std::string& uniformName, const glm::mat4& ma
     glUniformMatrix4fv(uniformMap[uniformName], 1, GL_FALSE, glm::value_ptr(mat));
 }
 
+void Shader::SendIntUniform(const std::string& uniformName, int value)
+{
+    glUseProgram(shaderProgram);
+    //int uniformLocation = glGetUniformLocation(shaderProgram, uniformName.c_str());
+    glUniform1i(uniformMap[uniformName], value);
+}
+
 void Shader::SetDefaultSource()
 {
     vertexSource =
@@ -64,18 +71,6 @@ void Shader::SetDefaultSource()
         "   color = fragColor;\n"
         "}\n";
 }
-
-//void Shader::SetDefaultSource()
-//{
-//    const std::string vertexFilePath = "basic.vert.glsl";
-//    const std::string fragmentFilePath = "basic.frag.glsl";
-//
-//    TextFile vertexFile(vertexFilePath);
-//    TextFile fragmentFile(fragmentFilePath);
-//
-//    vertexSource = vertexFile.getData();
-//    fragmentSource = fragmentFile.getData();
-//}
 
 void Shader::Init()
 {
