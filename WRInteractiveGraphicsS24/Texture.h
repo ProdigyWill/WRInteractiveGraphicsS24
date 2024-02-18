@@ -26,7 +26,11 @@ public:
 	inline unsigned int GetNumberOfChannels() const { return numberOfChannels; }
 	inline bool IsLoadedFromFile() const { return isLoadedFromFile; }
 	void SetWidth(int width);
-	void setHeight(int height);
+	void SetHeight(int height);
+	void SetWrapS(unsigned int wrapS);
+	void SetWrapT(unsigned int wrapT);
+	void SetMagFilter(unsigned int magFilter);
+	void SetMinFilter(unsigned int minFilter);
 	void SelectToChange();
 	void Deselect();
 	void SelectToRender(int textureUnit = 0);

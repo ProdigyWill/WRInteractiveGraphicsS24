@@ -30,9 +30,29 @@ void Texture::SetWidth(int width)
     this->width = width;
 }
 
-void Texture::setHeight(int height)
+void Texture::SetHeight(int height)
 {
     this->height = height;
+}
+
+void Texture::SetWrapS(unsigned int wrapS)
+{
+    this->wrapS = wrapS;
+}
+
+void Texture::SetWrapT(unsigned int wrapT)
+{
+    this->wrapT = wrapT;
+}
+
+void Texture::SetMagFilter(unsigned int magFilter)
+{
+    this->magFilter = magFilter;
+}
+
+void Texture::SetMinFilter(unsigned int minFilter)
+{
+    this->minFilter = minFilter;
 }
 
 void Texture::SelectToChange()

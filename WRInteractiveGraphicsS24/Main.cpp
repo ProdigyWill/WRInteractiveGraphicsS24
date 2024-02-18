@@ -58,9 +58,11 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 	textureShader->AddUniform("texUnit");
 
 	std::shared_ptr<Texture> sharedTexture = std::make_shared<Texture>();
-
 	sharedTexture->SetWidth(4);
-	sharedTexture->setHeight(4);
+	sharedTexture->SetHeight(4);
+	sharedTexture->SetWrapS(GL_CLAMP_TO_EDGE);
+	sharedTexture->SetWrapT(GL_CLAMP_TO_EDGE);
+	sharedTexture->SetMagFilter(GL_LINEAR);
 
 	unsigned char textureData[] = {
 		255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255,
@@ -74,12 +76,12 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 	std::shared_ptr<GraphicsObject> texturedObject = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> texturedBuffer = std::make_shared<VertexBuffer>(8);
 
-	texturedBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 3.0f);
 	texturedBuffer->AddVertexData(8, -50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-	texturedBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	texturedBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	texturedBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	texturedBuffer->AddVertexData(8, 50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 3.0f);
+	texturedBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 3.0f);
 
 	texturedBuffer->AddVertexAttribute("position", 0, 3, 0);
 	texturedBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
