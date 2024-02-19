@@ -18,11 +18,8 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "TextFile.h"
+#include "GraphicsEnvironment.h"
 
-void OnWindowSizeChanged(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
 
 void ProcessInput(GLFWwindow* window)
 {
@@ -122,31 +119,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	GraphicsEnvironment glfw;
+	glfw.Init(4, 3);
 
-	GLFWwindow* window = glfwCreateWindow(1200, 800, "ETSU Computing Interactive Graphics", NULL, NULL);
-	if (window == NULL) {
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
-	glfwMakeContextCurrent(window);
+	bool created = glfw.SetWindow(
+		1200, 800, "ETSU Computing Interactive Graphics");
+	if (created == false) return -1;
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return -1;
-	}
+	bool loaded = glfw.InitGlad();
+	if (loaded == false) return -1;
 
-	//Alpha Blending
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glfw.SetupGraphics();
 
-	glViewport(0, 0, 1200, 800);
-	glfwSetFramebufferSizeCallback(window, OnWindowSizeChanged);
-	//glfwMaximizeWindow(window);
+	GLFWwindow* window = glfw.GetWindow();
+
 
 	const std::string vertexFilePath = "basic.vert.glsl";
 	const std::string fragmentFilePath = "basic.frag.glsl";
@@ -164,18 +150,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	shader->AddUniform("view");
 	shaderProgram = shader->GetShaderProgram();
 
-
-	int width, height;
-	glfwGetWindowSize(window, &width, &height);
-	float aspectRatio = width / (height * 1.0f);
-
-	float left = -100.0f;
-	float right = 100.0f;
-	float bottom = -100.0f;
-	float top = 100.0f;
-	left *= aspectRatio;
-	right *= aspectRatio;
-	glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 
@@ -217,18 +191,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Renderer renderer(shader);
 	renderer.AllocateVertexBuffers(scene->GetObjects());
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 430");
-
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
 
 	glUseProgram(shaderProgram);
-
-	shader->SendMat4Uniform("projection", projection);
 
 	float angle = 0, childAngle = 0;
 	float cameraX = -10, cameraY = 0;
@@ -241,11 +206,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	Renderer textureRenderer(textureShader);
 	textureRenderer.AllocateVertexBuffers(textureScene->GetObjects());
-	textureRenderer.GetShader()->SendMat4Uniform("projection", projection);
 	
-
+	
+	ImGuiIO& io = ImGui::GetIO();
 	while (!glfwWindowShouldClose(window)) {
 		ProcessInput(window);
+
+		int width, height;
+		glfwGetWindowSize(window, &width, &height);
+		float aspectRatio = width / (height * 1.0f);
+
+		float left = -100.0f;
+		float right = 100.0f;
+		float bottom = -100.0f;
+		float top = 100.0f;
+		left *= aspectRatio;
+		right *= aspectRatio;
+		glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -265,10 +242,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				child->RotateLocalZ(childAngle);
 			}
 		}
+		renderer.SetProjection(projection);
+		renderer.SetScene(scene);
+		renderer.SetView(view);
+		renderer.RenderScene();
 
-
-		renderer.RenderScene(scene, view);
-		textureRenderer.RenderScene(textureScene, view);
+		textureRenderer.SetProjection(projection);
+		textureRenderer.SetScene(textureScene);
+		textureRenderer.SetView(view);
+		textureRenderer.RenderScene();
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

@@ -17,12 +17,13 @@ void Renderer::AllocateVertexBuffers(const std::vector<std::shared_ptr<GraphicsO
 	glBindVertexArray(0);
 }
 
-void Renderer::RenderScene(std::shared_ptr<Scene>& scene, glm::mat4& view)
+void Renderer::RenderScene()
 {
 	if (this->shader->IsCreated()) {
 		glUseProgram(this->shader->GetShaderProgram());
 		glBindVertexArray(this->vaoID);
 		shader->SendMat4Uniform("view", view);
+		shader->SendMat4Uniform("projection", projection);
 		// Render the objects in the scene
 		for (auto& object : scene->GetObjects()) {
 			RenderObject(*object);
@@ -32,6 +33,21 @@ void Renderer::RenderScene(std::shared_ptr<Scene>& scene, glm::mat4& view)
 		glUseProgram(0);
 		glBindVertexArray(0);
 	}
+}
+
+void Renderer::SetScene(std::shared_ptr<Scene> scene)
+{
+	this->scene = scene;
+}
+
+void Renderer::SetView(glm::mat4 view)
+{
+	this->view = view;
+}
+
+void Renderer::SetProjection(glm::mat4 projection)
+{
+	this->projection = projection;
 }
 
 void Renderer::RenderObject(const GraphicsObject& object)
