@@ -23,6 +23,7 @@ public:
 	void SetupGraphics();
 	void CreateRenderer(const std::string& name, std::shared_ptr<Shader> shader);
 	void StaticAllocate();
+	void Render();
 	std::shared_ptr<Renderer> GetRenderer(const std::string& name);
 };
 

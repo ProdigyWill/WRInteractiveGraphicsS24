@@ -63,6 +63,16 @@ void GraphicsEnvironment::CreateRenderer(const std::string& name, std::shared_pt
 
 void GraphicsEnvironment::StaticAllocate()
 {
+	for (auto& pair : rendererMap) {
+		pair.second->AllocateVertexBuffers(pair.second->GetScene()->GetObjects());
+	}
+}
+
+void GraphicsEnvironment::Render()
+{
+	for (const auto& pair : rendererMap) {
+		pair.second->RenderScene();
+	}
 }
 
 std::shared_ptr<Renderer> GraphicsEnvironment::GetRenderer(const std::string& name)
