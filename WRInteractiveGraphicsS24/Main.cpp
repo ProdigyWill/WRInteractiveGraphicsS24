@@ -44,6 +44,56 @@ static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& di
 	return glm::inverse(view);
 }
 
+static void SetUpScene(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene) {
+	const std::string vertexFilePath = "basic.vert.glsl";
+	const std::string fragmentFilePath = "basic.frag.glsl";
+
+	TextFile vertexFile(vertexFilePath);
+	TextFile fragmentFile(fragmentFilePath);
+
+	shader = std::make_shared<Shader>(vertexFile.getData(), fragmentFile.getData());
+	shader->AddUniform("projection");
+	shader->AddUniform("world");
+	shader->AddUniform("view");
+
+	scene = std::make_shared<Scene>();
+
+	std::shared_ptr<GraphicsObject> square = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> buffer = std::make_shared<VertexBuffer>(6);
+	buffer->AddVertexData(6, -5.0f, 5.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	buffer->AddVertexData(6, -5.0f, -5.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	buffer->AddVertexData(6, 5.0f, -5.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	buffer->AddVertexData(6, -5.0f, 5.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	buffer->AddVertexData(6, 5.0f, -5.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	buffer->AddVertexData(6, 5.0f, 5.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	buffer->AddVertexAttribute("position", 0, 3);
+	buffer->AddVertexAttribute("color", 1, 3, 3);
+	square->SetVertexBuffer(buffer);
+	scene->AddObject(square);
+
+	std::shared_ptr<GraphicsObject> triangle = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> buffer2 = std::make_shared<VertexBuffer>(6);
+	buffer2->AddVertexData(6, -5.0f, 5.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	buffer2->AddVertexData(6, -5.0f, -5.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	buffer2->AddVertexData(6, 5.0f, -5.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	buffer2->AddVertexAttribute("position", 0, 3);
+	buffer2->AddVertexAttribute("color", 1, 3, 3);
+	triangle->SetVertexBuffer(buffer2);
+	triangle->SetPosition(glm::vec3(30.0f, 0.0f, 0.0f));
+	scene->AddObject(triangle);
+
+	std::shared_ptr<GraphicsObject> line = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> buffer3 = std::make_shared<VertexBuffer>(6);
+	buffer3->SetPrimitiveType(GL_LINES);
+	buffer3->AddVertexData(6, 0.0f, 2.5f, 0.0f, 0.0f, 1.0f, 0.0f);
+	buffer3->AddVertexData(6, 0.0f, -2.5f, 0.0f, 0.0f, 1.0f, 0.0f);
+	buffer3->AddVertexAttribute("position", 0, 3);
+	buffer3->AddVertexAttribute("color", 1, 3, 3);
+	line->SetVertexBuffer(buffer3);
+	line->SetPosition(glm::vec3(5.0f, -10.0f, 0.0f));
+	triangle->AddChild(line);
+}
+
 static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shared_ptr<Scene>& textureScene) {
 	TextFile textureVertexFile("texture.vert.glsl");
 	TextFile textureFragmentFile("texture.frag.glsl");
@@ -134,7 +184,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	GLFWwindow* window = glfw.GetWindow();
 
 
-	const std::string vertexFilePath = "basic.vert.glsl";
+	/*const std::string vertexFilePath = "basic.vert.glsl";
 	const std::string fragmentFilePath = "basic.frag.glsl";
 	
 	TextFile vertexFile(vertexFilePath);
@@ -186,10 +236,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	buffer3->AddVertexAttribute("color", 1, 3, 3);
 	line->SetVertexBuffer(buffer3);
 	line->SetPosition(glm::vec3(5.0f, -10.0f, 0.0f));
-	triangle->AddChild(line);
+	triangle->AddChild(line);*/
 
-	Renderer renderer(shader);
-	renderer.AllocateVertexBuffers(scene->GetObjects());
+	//Renderer renderer(shader);
+	//renderer.AllocateVertexBuffers(scene->GetObjects());
+	std::shared_ptr<Shader> shader;
+	std::shared_ptr<Scene> scene;
+
+	SetUpScene(shader, scene);
+	unsigned int shaderProgram;
+	shaderProgram = shader->GetShaderProgram();
+
+	glfw.CreateRenderer("basic", shader);
+	glfw.GetRenderer("basic")->SetScene(scene);
 
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
 
@@ -204,8 +263,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	SetUpTexturedScene(textureShader, textureScene);
 
-	Renderer textureRenderer(textureShader);
-	textureRenderer.AllocateVertexBuffers(textureScene->GetObjects());
+	//Renderer textureRenderer(textureShader);
+	//textureRenderer.AllocateVertexBuffers(textureScene->GetObjects());
+	glfw.CreateRenderer("texture", textureShader);
+	glfw.GetRenderer("texture")->SetScene(textureScene);
+	glfw.StaticAllocate();
 	
 	
 	ImGuiIO& io = ImGui::GetIO();
@@ -242,15 +304,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				child->RotateLocalZ(childAngle);
 			}
 		}
-		renderer.SetProjection(projection);
-		renderer.SetScene(scene);
-		renderer.SetView(view);
-		renderer.RenderScene();
+		//renderer.SetProjection(projection);
+		//renderer.SetScene(scene);
+		//renderer.SetView(view);
+		//renderer.RenderScene();
+		glfw.GetRenderer("basic")->SetProjection(projection);
+		glfw.GetRenderer("basic")->SetView(view);
+		glfw.GetRenderer("basic")->RenderScene();
 
-		textureRenderer.SetProjection(projection);
-		textureRenderer.SetScene(textureScene);
-		textureRenderer.SetView(view);
-		textureRenderer.RenderScene();
+		//textureRenderer.SetProjection(projection);
+		//textureRenderer.SetScene(textureScene);
+		//textureRenderer.SetView(view);
+		//textureRenderer.RenderScene();
+		glfw.GetRenderer("texture")->SetProjection(projection);
+		glfw.GetRenderer("texture")->SetView(view);
+		glfw.GetRenderer("texture")->RenderScene();
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
