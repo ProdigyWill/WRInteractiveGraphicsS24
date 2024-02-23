@@ -181,38 +181,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	glfw.SetupGraphics();
 
-	GLFWwindow* window = glfw.GetWindow();
-
 	std::shared_ptr<Shader> shader;
 	std::shared_ptr<Scene> scene;
-
 	SetUpScene(shader, scene);
+
+	std::shared_ptr<Shader> textureShader;
+	std::shared_ptr<Scene> textureScene;
+	SetUpTexturedScene(textureShader, textureScene);
+	
 	unsigned int shaderProgram;
 	shaderProgram = shader->GetShaderProgram();
 
 	glfw.CreateRenderer("basic", shader);
 	glfw.GetRenderer("basic")->SetScene(scene);
+	glfw.CreateRenderer("texture", textureShader);
+	glfw.GetRenderer("texture")->SetScene(textureScene);
+	glfw.StaticAllocate();
 
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
-
 	glUseProgram(shaderProgram);
 
 	float angle = 0, childAngle = 0;
 	float cameraX = -10, cameraY = 0;
 	glm::mat4 view;
-
-	std::shared_ptr<Shader> textureShader;
-	std::shared_ptr<Scene> textureScene;
-
-	SetUpTexturedScene(textureShader, textureScene);
-
-	//Renderer textureRenderer(textureShader);
-	//textureRenderer.AllocateVertexBuffers(textureScene->GetObjects());
-	glfw.CreateRenderer("texture", textureShader);
-	glfw.GetRenderer("texture")->SetScene(textureScene);
-	glfw.StaticAllocate();
 	
-	
+	GLFWwindow* window = glfw.GetWindow();
 	ImGuiIO& io = ImGui::GetIO();
 	while (!glfwWindowShouldClose(window)) {
 		ProcessInput(window);
@@ -247,18 +240,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				child->RotateLocalZ(childAngle);
 			}
 		}
-		//renderer.SetProjection(projection);
-		//renderer.SetScene(scene);
-		//renderer.SetView(view);
-		//renderer.RenderScene();
+
 		glfw.GetRenderer("basic")->SetProjection(projection);
 		glfw.GetRenderer("basic")->SetView(view);
 		glfw.GetRenderer("basic")->RenderScene();
 
-		//textureRenderer.SetProjection(projection);
-		//textureRenderer.SetScene(textureScene);
-		//textureRenderer.SetView(view);
-		//textureRenderer.RenderScene();
 		glfw.GetRenderer("texture")->SetProjection(projection);
 		glfw.GetRenderer("texture")->SetView(view);
 		glfw.GetRenderer("texture")->RenderScene();
