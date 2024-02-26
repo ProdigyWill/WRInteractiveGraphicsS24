@@ -156,11 +156,11 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	shader->AddUniform("texUnit");
 
 	std::shared_ptr<Texture> sharedTexture = std::make_shared<Texture>();
-	sharedTexture->SetWidth(4);
-	sharedTexture->SetHeight(4);
+	sharedTexture->SetWidth(5);
+	sharedTexture->SetHeight(5);
 	sharedTexture->SetWrapS(GL_CLAMP_TO_EDGE);
 	sharedTexture->SetWrapT(GL_CLAMP_TO_EDGE);
-	sharedTexture->SetMagFilter(GL_LINEAR);
+	sharedTexture->SetMagFilter(GL_REPEAT);
 
 	// Create the texture data
 	unsigned char* textureData = new unsigned char[] {
@@ -179,37 +179,48 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	texturedBuffer->AddVertexData(8, -5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
 	texturedBuffer->AddVertexData(8, -5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, 5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, -5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 	// Right face
 	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
 	texturedBuffer->AddVertexData(8, 5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, 5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, -5.0f, -5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, 5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 	// Back face  
 	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, -5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
 	texturedBuffer->AddVertexData(8, 5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, -5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, -5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, -5.0f, -5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, -5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 	// Left face 
-	texturedBuffer->AddVertexData(8, 5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
 	texturedBuffer->AddVertexData(8, -5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, -5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, 5.0f, -5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, -5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, -5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 	// Top face	
-	texturedBuffer->AddVertexData(8, 5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
 	texturedBuffer->AddVertexData(8, -5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, 5.0f, -5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
 	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, 5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 	// Bottom face 
 	texturedBuffer->AddVertexData(8, 5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
 	texturedBuffer->AddVertexData(8, 5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, -5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, -5.0f, -5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, -5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
 	texturedBuffer->AddVertexData(8, -5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 
 	texturedBuffer->AddVertexAttribute("position", 0, 3, 0);
 	texturedBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
 	texturedBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
-
 
 	texturedBuffer->SetTexture(sharedTexture);
 	texturedObject->SetVertexBuffer(texturedBuffer);
