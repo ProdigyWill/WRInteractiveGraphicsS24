@@ -38,10 +38,14 @@ void GraphicsEnvironment::Init(unsigned int majorVersion, unsigned int minorVers
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, majorVersion);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minorVersion);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 }
 
 void GraphicsEnvironment::SetupGraphics()
 {
+	//Antialiasing
+	glEnable(GL_MULTISAMPLE);
+
 	// Enable back face culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -198,7 +202,7 @@ void GraphicsEnvironment::Run3D()
 	int width, height;
 	float aspectRatio;
 	float nearPlane = 1.0f;
-	float farPlane = 50.0f;
+	float farPlane = 100.0f;
 	float fieldOfView = 60;
 
 	glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
@@ -225,10 +229,6 @@ void GraphicsEnvironment::Run3D()
 			object->RotateLocalY(cubeYAngle);
 			object->RotateLocalZ(cubeZAngle);
 		}
-
-		referenceFrame = glm::rotate(glm::mat4(1.0f), glm::radians(cubeYAngle), glm::vec3(0.0f, 1.0f, 0.0f));
-		referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeXAngle), glm::vec3(1.0f, 0.0f, 0.0f));
-		referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeZAngle), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
 
