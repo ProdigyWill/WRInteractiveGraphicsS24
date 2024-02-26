@@ -238,10 +238,6 @@ void GraphicsEnvironment::Run3D()
 		GetRenderer("basic")->SetView(view);
 		GetRenderer("basic")->RenderScene();
 
-		GetRenderer("texture")->SetProjection(projection);
-		GetRenderer("texture")->SetView(view);
-		GetRenderer("texture")->RenderScene();
-
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();

@@ -155,6 +155,13 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	shader->AddUniform("view");
 	shader->AddUniform("texUnit");
 
+	std::shared_ptr<Texture> sharedTexture = std::make_shared<Texture>();
+	sharedTexture->SetWidth(4);
+	sharedTexture->SetHeight(4);
+	sharedTexture->SetWrapS(GL_CLAMP_TO_EDGE);
+	sharedTexture->SetWrapT(GL_CLAMP_TO_EDGE);
+	sharedTexture->SetMagFilter(GL_LINEAR);
+
 	// Create the texture data
 	unsigned char* textureData = new unsigned char[] {
 			0, 0, 0, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 255,
@@ -163,53 +170,51 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 			0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 0, 0, 0, 255
 	};
 
-	// Front face
-	VertexData A = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData B = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData C = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData D = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Right face
-	VertexData E = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData F = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData G = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData H = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Back face
-	VertexData I = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData J = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData K = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData L = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Left face
-	VertexData M = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData N = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData O = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData P = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Top face
-	VertexData Q = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData R = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData S = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData T = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Bottom face
-	VertexData U = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData V = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData W = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData X = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
+	sharedTexture->SetTextureData(sizeof(textureData), textureData);
+	scene = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> texturedObject = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> texturedBuffer = std::make_shared<VertexBuffer>(8);
 
-	// 3 vertex per triangle, 2 triangles per face, 6 faces
-	// 3 * 2 * 6 = 36 vertices
-	VertexData vertexData[36]{
-		// Front face
-		A, B, C, A, C, D,
-		// Right face
-		E, F, G, E, G, H,
-		// Back face
-		I, J, K, I, K, L,
-		// Left face
-		M, N, O, M, O, P,
-		// Top face
-		Q, R, S, Q, S, T,
-		// Bottom face
-		U, V, W, U, W, X
-	};
+	// Front face
+	texturedBuffer->AddVertexData(8, -5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	// Right face
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, 5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	// Back face  
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, -5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, 5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	// Left face 
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	// Top face	
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, -5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, 5.0f, 5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	// Bottom face 
+	texturedBuffer->AddVertexData(8, 5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	texturedBuffer->AddVertexData(8, 5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -5.0f,-5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	texturedBuffer->AddVertexData(8, -5.0f,-5.0f,-5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	texturedBuffer->AddVertexAttribute("position", 0, 3, 0);
+	texturedBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
+	texturedBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
+
+
+	texturedBuffer->SetTexture(sharedTexture);
+	texturedObject->SetVertexBuffer(texturedBuffer);
+	texturedObject->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	scene->AddObject(texturedObject);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -229,21 +234,33 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	glfw.SetupGraphics();
 
+	//std::shared_ptr<Shader> shader;
+	//std::shared_ptr<Scene> scene;
+	//SetUpScene(shader, scene);
+
+	//std::shared_ptr<Shader> textureShader;
+	//std::shared_ptr<Scene> textureScene;
+	//SetUpTexturedScene(textureShader, textureScene);
+	
+	//glfw.CreateRenderer("basic", shader);
+	//glfw.GetRenderer("basic")->SetScene(scene);
+	//glfw.CreateRenderer("texture", textureShader);
+	//glfw.GetRenderer("texture")->SetScene(textureScene);
+	//glfw.StaticAllocate();
+
+	//glfw.Run2D();
+
 	std::shared_ptr<Shader> shader;
 	std::shared_ptr<Scene> scene;
-	SetUpScene(shader, scene);
+	SetUp3DScene1(shader, scene);
 
-	std::shared_ptr<Shader> textureShader;
-	std::shared_ptr<Scene> textureScene;
-	SetUpTexturedScene(textureShader, textureScene);
-	
 	glfw.CreateRenderer("basic", shader);
 	glfw.GetRenderer("basic")->SetScene(scene);
-	glfw.CreateRenderer("texture", textureShader);
-	glfw.GetRenderer("texture")->SetScene(textureScene);
 	glfw.StaticAllocate();
 
-	glfw.Run2D();
+	glfw.Run3D();
+
+
 	return 0;
 }
 
