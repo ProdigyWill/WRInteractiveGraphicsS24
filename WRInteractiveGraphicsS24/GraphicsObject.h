@@ -19,6 +19,7 @@ public:
 	const glm::mat4 GetReferenceFrame() const;
 	void CreateVertexBuffer(unsigned int numberOfElementsPerVertex);
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer);
+	void SetReferenceFrame(glm::mat4 referenceFrame);
 	inline const std::shared_ptr<VertexBuffer>& GetVertexBuffer() const {
 		return buffer;
 	}

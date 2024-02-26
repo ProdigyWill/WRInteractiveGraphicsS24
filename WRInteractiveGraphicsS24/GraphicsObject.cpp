@@ -27,6 +27,11 @@ void GraphicsObject::SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer)
 	this->buffer = buffer;
 }
 
+void GraphicsObject::SetReferenceFrame(glm::mat4 referenceFrame)
+{
+	this->referenceFrame = referenceFrame;
+}
+
 void GraphicsObject::StaticAllocateVertexBuffer()
 {
 	buffer->Select();

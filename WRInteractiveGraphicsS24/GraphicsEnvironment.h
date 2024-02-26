@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <unordered_map>
+#include <iostream>
 #include "Renderer.h"
 class GraphicsEnvironment : public BaseObject
 {
@@ -30,6 +31,7 @@ public:
 	void ProcessInput(GLFWwindow* window);
 	static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
 	void Run2D();
+	void Run3D();
 	std::shared_ptr<Renderer> GetRenderer(const std::string& name);
 };
 
