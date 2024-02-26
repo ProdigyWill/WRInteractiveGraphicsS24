@@ -156,11 +156,8 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	shader->AddUniform("texUnit");
 
 	std::shared_ptr<Texture> sharedTexture = std::make_shared<Texture>();
-	sharedTexture->SetWidth(5);
-	sharedTexture->SetHeight(5);
-	sharedTexture->SetWrapS(GL_CLAMP_TO_EDGE);
-	sharedTexture->SetWrapT(GL_CLAMP_TO_EDGE);
-	sharedTexture->SetMagFilter(GL_REPEAT);
+	sharedTexture->SetWidth(4);
+	sharedTexture->SetHeight(4);
 
 	// Create the texture data
 	unsigned char* textureData = new unsigned char[] {
