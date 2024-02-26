@@ -27,6 +27,11 @@ void GraphicsObject::SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer)
 	this->buffer = buffer;
 }
 
+void GraphicsObject::SetReferenceFrame(glm::mat4 referenceFrame)
+{
+	this->referenceFrame = referenceFrame;
+}
+
 void GraphicsObject::StaticAllocateVertexBuffer()
 {
 	buffer->Select();
@@ -53,6 +58,24 @@ void GraphicsObject::ResetOrientation()
 	glm::vec4 position = referenceFrame[3];
 	referenceFrame = glm::mat4(1.0f);
 	referenceFrame[3] = position;
+}
+
+void GraphicsObject::RotateLocalX(float degrees)
+{
+	referenceFrame = glm::rotate(
+		referenceFrame,
+		glm::radians(degrees),
+		glm::vec3(1.0f, 0.0f, 0.0f)
+	);
+}
+
+void GraphicsObject::RotateLocalY(float degrees)
+{
+	referenceFrame = glm::rotate(
+		referenceFrame,
+		glm::radians(degrees),
+		glm::vec3(0.0f, 1.0f, 0.0f)
+	);
 }
 
 void GraphicsObject::RotateLocalZ(float degrees)
