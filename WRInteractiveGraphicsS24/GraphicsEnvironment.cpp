@@ -100,11 +100,7 @@ glm::mat4 GraphicsEnvironment::CreateViewMatrix(const glm::vec3& position, const
 
 void GraphicsEnvironment::Run2D()
 {
-	unsigned int shaderProgram;
-	shaderProgram = GetRenderer("basic")->GetShader()->GetShaderProgram();
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
-	glUseProgram(shaderProgram);
-
 	float angle = 0, childAngle = 0;
 	float cameraX = -10, cameraY = 0;
 	glm::mat4 view;
