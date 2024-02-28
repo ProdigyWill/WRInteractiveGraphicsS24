@@ -1,5 +1,9 @@
 #include "GraphicsEnvironment.h"
 #include <iostream>
+#include "Timer.h"
+#include "ObjectManager.h"
+
+std::shared_ptr<ObjectManager> objectManager = std::make_shared<ObjectManager>();
 
 GraphicsEnvironment::~GraphicsEnvironment()
 {
@@ -215,7 +219,10 @@ void GraphicsEnvironment::Run3D()
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
 
 	ImGuiIO& io = ImGui::GetIO();
+	double elapsedSeconds;
+	Timer timer;
 	while (!glfwWindowShouldClose(window)) {
+		elapsedSeconds = timer.GetElapsedTimeInSeconds();
 		ProcessInput(window);
 		glfwGetWindowSize(window, &width, &height);
 
@@ -240,6 +247,8 @@ void GraphicsEnvironment::Run3D()
 		}
 		projection = glm::perspective(
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
+
+		objectManager->Update(elapsedSeconds);
 
 		// Render the object
 		GetRenderer("basic")->SetProjection(projection);
@@ -273,6 +282,11 @@ void GraphicsEnvironment::Run3D()
 	ImGui::DestroyContext();
 
 	glfwTerminate();
+}
+
+void GraphicsEnvironment::AddObject(const std::string& name, std::shared_ptr<GraphicsObject> object)
+{
+	objectManager->SetObject(name, object);
 }
 
 std::shared_ptr<Renderer> GraphicsEnvironment::GetRenderer(const std::string& name)

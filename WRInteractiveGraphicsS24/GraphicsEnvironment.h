@@ -32,6 +32,7 @@ public:
 	static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
 	void Run2D();
 	void Run3D();
+	void AddObject(const std::string& name, std::shared_ptr<GraphicsObject> object);
 	std::shared_ptr<Renderer> GetRenderer(const std::string& name);
 };
 
