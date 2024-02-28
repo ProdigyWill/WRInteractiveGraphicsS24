@@ -237,7 +237,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	std::shared_ptr<Shader> shader;
 	std::shared_ptr<Scene> scene;
-	SetUp3DScene1(shader, scene);
+	std::shared_ptr<ObjectManager> objectManager = glfw.GetManager();
+	SetUp3DScene1(shader, scene, objectManager);
 
 	glfw.CreateRenderer("basic", shader);
 	glfw.GetRenderer("basic")->SetScene(scene);

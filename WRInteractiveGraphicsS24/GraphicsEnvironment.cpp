@@ -1,9 +1,6 @@
 #include "GraphicsEnvironment.h"
 #include <iostream>
 #include "Timer.h"
-#include "ObjectManager.h"
-
-std::shared_ptr<ObjectManager> objectManager = std::make_shared<ObjectManager>();
 
 GraphicsEnvironment::~GraphicsEnvironment()
 {

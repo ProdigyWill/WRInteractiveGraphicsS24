@@ -11,15 +11,19 @@
 #include <unordered_map>
 #include <iostream>
 #include "Renderer.h"
+#include "ObjectManager.h"
 class GraphicsEnvironment : public BaseObject
 {
 private:
 	GLFWwindow* window;
 	std::unordered_map<std::string, std::shared_ptr<Renderer>> rendererMap;
+	std::shared_ptr<ObjectManager> objectManager = std::make_shared<ObjectManager>();
 
 public:
+
 	~GraphicsEnvironment();
 	inline GLFWwindow* GetWindow() const { return window; }
+	inline std::shared_ptr<ObjectManager> GetManager() const { return objectManager; }
 	static void OnWindowSizeChanged(GLFWwindow* window, int width, int height);
 	bool SetWindow(unsigned int width, unsigned int height, const std::string& title);
 	bool InitGlad();
