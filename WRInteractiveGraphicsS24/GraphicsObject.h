@@ -4,6 +4,8 @@
 
 #include "VertexBuffer.h"
 
+class IAnimation;
+
 class GraphicsObject
 {
 protected:
@@ -11,15 +13,18 @@ protected:
 	std::shared_ptr<VertexBuffer> buffer;
 	GraphicsObject* parent;
 	std::vector<std::shared_ptr<GraphicsObject>> children;
+	std::shared_ptr<IAnimation> animation = nullptr;
 
 public:
 	GraphicsObject();
 	virtual ~GraphicsObject();
 
 	const glm::mat4 GetReferenceFrame() const;
+	glm::mat4& GetLocalReferenceFrame() { return referenceFrame; }
 	void CreateVertexBuffer(unsigned int numberOfElementsPerVertex);
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer);
 	void SetReferenceFrame(glm::mat4 referenceFrame);
+	void SetAnimation(std::shared_ptr<IAnimation> animation);
 	inline const std::shared_ptr<VertexBuffer>& GetVertexBuffer() const {
 		return buffer;
 	}

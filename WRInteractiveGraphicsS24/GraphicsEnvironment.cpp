@@ -1,6 +1,7 @@
 #include "GraphicsEnvironment.h"
 #include <iostream>
 #include "Timer.h"
+#include "RotateAnimation.h"
 
 GraphicsEnvironment::~GraphicsEnvironment()
 {
@@ -218,6 +219,13 @@ void GraphicsEnvironment::Run3D()
 	ImGuiIO& io = ImGui::GetIO();
 	double elapsedSeconds;
 	Timer timer;
+
+	std::shared_ptr<RotateAnimation> rotateAnimation =
+		std::make_shared<RotateAnimation>();
+	rotateAnimation->SetObject(objectManager->GetObject("TextureObject2"));
+	objectManager->GetObject("TextureObject2")->SetAnimation(rotateAnimation);
+
+
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
 		ProcessInput(window);
@@ -226,13 +234,13 @@ void GraphicsEnvironment::Run3D()
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		// Update the objects in the scene
-		for (auto& object : GetRenderer("basic")->GetScene()->GetObjects()) {
-			object->ResetOrientation();
-			object->RotateLocalX(cubeXAngle);
-			object->RotateLocalY(cubeYAngle);
-			object->RotateLocalZ(cubeZAngle);
-		}
+		//// Update the objects in the scene
+		//for (auto& object : GetRenderer("basic")->GetScene()->GetObjects()) {
+		//	object->ResetOrientation();
+		//	object->RotateLocalX(cubeXAngle);
+		//	object->RotateLocalY(cubeYAngle);
+		//	object->RotateLocalZ(cubeZAngle);
+		//}
 
 		view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
 

@@ -1,4 +1,5 @@
 #include "GraphicsObject.h"
+#include "IAnimation.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
@@ -30,6 +31,11 @@ void GraphicsObject::SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer)
 void GraphicsObject::SetReferenceFrame(glm::mat4 referenceFrame)
 {
 	this->referenceFrame = referenceFrame;
+}
+
+void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
+{
+	this->animation = animation;
 }
 
 void GraphicsObject::StaticAllocateVertexBuffer()
@@ -89,4 +95,5 @@ void GraphicsObject::RotateLocalZ(float degrees)
 
 void GraphicsObject::Update(double elapsedSeconds)
 {
+	if (animation) { animation->Update(elapsedSeconds); }	
 }
