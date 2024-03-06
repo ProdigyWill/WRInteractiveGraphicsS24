@@ -5,7 +5,7 @@ class Camera
 {
 protected:
 	glm::mat4 referenceFrame = glm::mat4(1.0f);
-	glm::mat4 lookFrame = glm::mat4(1.0f);
+	glm::mat4 lookFrame;
 	int speed = 10;
 public:
 	void SetLookFrame(glm::mat4 lookFrame);
@@ -21,5 +21,7 @@ public:
 	void MoveDown(double elapsedSeconds);
 	void LookLeft(double elapsedSeconds);
 	void LookRight(double elapsedSeconds);
+	void LookUp(double elapsedSeconds);
+	void LookDown(double elapsedSeconds);
 };
 

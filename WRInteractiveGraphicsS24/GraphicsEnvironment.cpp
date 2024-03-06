@@ -2,7 +2,12 @@
 #include <iostream>
 #include "Timer.h"
 #include "RotateAnimation.h"
+GraphicsEnvironment* GraphicsEnvironment::self;
 
+GraphicsEnvironment::GraphicsEnvironment()
+{
+	self = this;
+}
 
 GraphicsEnvironment::~GraphicsEnvironment()
 {
@@ -64,6 +69,9 @@ void GraphicsEnvironment::SetupGraphics()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glfwSetFramebufferSizeCallback(window, OnWindowSizeChanged);
+
+	//Mouse
+	glfwSetCursorPosCallback(window, OnMouseMove);
 
 	//IMGUI
 	IMGUI_CHECKVERSION();
@@ -130,6 +138,26 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 		camera->LookLeft(elapsedSeconds);
 		return;
 	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		camera->LookUp(elapsedSeconds);
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		camera->LookDown(elapsedSeconds);
+		return;
+	}
+}
+
+void GraphicsEnvironment::OnMouseMove(GLFWwindow* window, double mouseX, double mouseY)
+{
+	self->mouse.x = mouseX;
+	self->mouse.y = mouseY;
+
+	float xPercent = static_cast<float>(self->mouse.x / self->mouse.windowWidth);
+	float yPercent = static_cast<float>(self->mouse.y / self->mouse.windowHeight);
+
+	self->mouse.spherical.theta = 90.0f - (xPercent * 180); // left/right
+	self->mouse.spherical.phi = 180.0f - (yPercent * 180); // up/down
 }
 
 glm::mat4 GraphicsEnvironment::CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up)
@@ -227,23 +255,21 @@ void GraphicsEnvironment::Run2D()
 
 void GraphicsEnvironment::Run3D()
 {
-	float cubeYAngle = 0;
-	float cubeXAngle = 0;
-	float cubeZAngle = 0;
-	float left = -20.0f;
-	float right = 20.0f;
-	float bottom = -20.0f;
-	float top = 20.0f;
+	//float cubeYAngle = 0;
+	//float cubeXAngle = 0;
+	//float cubeZAngle = 0;
+	//float left = -20.0f;
+	//float right = 20.0f;
+	//float bottom = -20.0f;
+	//float top = 20.0f;
 	int width, height;
 	float aspectRatio;
 	float nearPlane = 1.0f;
 	float farPlane = 100.0f;
 	float fieldOfView = 60;
 
-	//glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
-	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
-	//glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
+	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
 	glm::mat4 view;
 	glm::mat4 projection;
 	glm::mat4 referenceFrame(1.0f);
@@ -285,6 +311,9 @@ void GraphicsEnvironment::Run3D()
 		projection = glm::perspective(
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
+		camera->SetLookFrame(glm::mat4(1.0f));
+		self->mouse.windowHeight = height;
+		self->mouse.windowWidth = width;		
 		view = camera->LookForward();
 		objectManager->Update(elapsedSeconds);
 
@@ -301,6 +330,7 @@ void GraphicsEnvironment::Run3D()
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / io.Framerate, io.Framerate);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
+		ImGui::Text("Mouse: (%.0f, %.0f)", mouse.x, mouse.y);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

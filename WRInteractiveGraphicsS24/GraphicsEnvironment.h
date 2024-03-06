@@ -13,6 +13,7 @@
 #include "Renderer.h"
 #include "ObjectManager.h"
 #include "Camera.h"
+#include "GraphicsStructures.h"
 class GraphicsEnvironment : public BaseObject
 {
 private:
@@ -20,8 +21,10 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Renderer>> rendererMap;
 	std::shared_ptr<ObjectManager> objectManager = std::make_shared<ObjectManager>();
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+	static GraphicsEnvironment* self;
+	MouseParams mouse;
 public:
-
+	GraphicsEnvironment();
 	~GraphicsEnvironment();
 	inline GLFWwindow* GetWindow() const { return window; }
 	inline std::shared_ptr<ObjectManager> GetManager() const { return objectManager; }
@@ -34,6 +37,7 @@ public:
 	void StaticAllocate();
 	void Render();
 	void ProcessInput(GLFWwindow* window, double elapsedSeconds);
+	static void OnMouseMove(GLFWwindow* window, double mouseX, double mouseY);
 	static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
 	void Run2D();
 	void Run3D();

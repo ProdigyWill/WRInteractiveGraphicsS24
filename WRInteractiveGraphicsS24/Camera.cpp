@@ -102,3 +102,21 @@ void Camera::LookRight(double elapsedSeconds)
 	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), rotationAngle, yAxis);
 	lookFrame *= rotationMatrix;
 }
+
+void Camera::LookUp(double elapsedSeconds)
+{
+	glm::vec3 xAxis = referenceFrame[0];
+	float rotationAngle = static_cast<float>(elapsedSeconds);
+
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), rotationAngle, xAxis);
+	lookFrame *= rotationMatrix;
+}
+
+void Camera::LookDown(double elapsedSeconds)
+{
+	glm::vec3 xAxis = referenceFrame[0];
+	float rotationAngle = -static_cast<float>(elapsedSeconds);
+
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), rotationAngle, xAxis);
+	lookFrame *= rotationMatrix;
+}
