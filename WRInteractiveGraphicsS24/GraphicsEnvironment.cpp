@@ -285,6 +285,7 @@ void GraphicsEnvironment::Run3D()
 	objectManager->GetObject("TextureObject2")->SetAnimation(rotateAnimation);
 
 	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
+	camera->SetLookFrame(glm::mat4(1.0f));
 
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
@@ -311,7 +312,6 @@ void GraphicsEnvironment::Run3D()
 		projection = glm::perspective(
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
-		camera->SetLookFrame(glm::mat4(1.0f));
 		self->mouse.windowHeight = height;
 		self->mouse.windowWidth = width;		
 		view = camera->LookForward();
