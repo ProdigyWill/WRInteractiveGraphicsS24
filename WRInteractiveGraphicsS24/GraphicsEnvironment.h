@@ -12,13 +12,14 @@
 #include <iostream>
 #include "Renderer.h"
 #include "ObjectManager.h"
+#include "Camera.h"
 class GraphicsEnvironment : public BaseObject
 {
 private:
 	GLFWwindow* window;
 	std::unordered_map<std::string, std::shared_ptr<Renderer>> rendererMap;
 	std::shared_ptr<ObjectManager> objectManager = std::make_shared<ObjectManager>();
-
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 public:
 
 	~GraphicsEnvironment();
@@ -32,7 +33,7 @@ public:
 	void CreateRenderer(const std::string& name, std::shared_ptr<Shader> shader);
 	void StaticAllocate();
 	void Render();
-	void ProcessInput(GLFWwindow* window);
+	void ProcessInput(GLFWwindow* window, double elapsedSeconds);
 	static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
 	void Run2D();
 	void Run3D();

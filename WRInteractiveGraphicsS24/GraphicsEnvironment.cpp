@@ -3,6 +3,7 @@
 #include "Timer.h"
 #include "RotateAnimation.h"
 
+
 GraphicsEnvironment::~GraphicsEnvironment()
 {
 	glfwTerminate();
@@ -92,10 +93,42 @@ void GraphicsEnvironment::Render()
 	}
 }
 
-void GraphicsEnvironment::ProcessInput(GLFWwindow* window)
+void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
+	}
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		camera->MoveForward(elapsedSeconds);
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		camera->MoveBackward(elapsedSeconds);
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		camera->MoveLeft(elapsedSeconds);
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		camera->MoveRight(elapsedSeconds);
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		camera->MoveUp(elapsedSeconds);
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+		camera->MoveDown(elapsedSeconds);
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		camera->LookRight(elapsedSeconds);
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		camera->LookLeft(elapsedSeconds);
+		return;
 	}
 }
 
@@ -124,7 +157,7 @@ void GraphicsEnvironment::Run2D()
 
 	ImGuiIO& io = ImGui::GetIO();
 	while (!glfwWindowShouldClose(window)) {
-		ProcessInput(window);
+		//ProcessInput(window);
 
 		int width, height;
 		glfwGetWindowSize(window, &width, &height);
@@ -207,9 +240,9 @@ void GraphicsEnvironment::Run3D()
 	float farPlane = 100.0f;
 	float fieldOfView = 60;
 
-	glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
+	//glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
 	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
-	glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
+	//glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
 	glm::mat4 view;
 	glm::mat4 projection;
@@ -225,10 +258,11 @@ void GraphicsEnvironment::Run3D()
 	rotateAnimation->SetObject(objectManager->GetObject("TextureObject2"));
 	objectManager->GetObject("TextureObject2")->SetAnimation(rotateAnimation);
 
+	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
 
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
-		ProcessInput(window);
+		ProcessInput(window, elapsedSeconds);
 		glfwGetWindowSize(window, &width, &height);
 
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
@@ -242,8 +276,6 @@ void GraphicsEnvironment::Run3D()
 		//	object->RotateLocalZ(cubeZAngle);
 		//}
 
-		view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
-
 		if (width >= height) {
 			aspectRatio = width / (height * 1.0f);
 		}
@@ -253,6 +285,7 @@ void GraphicsEnvironment::Run3D()
 		projection = glm::perspective(
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
+		view = camera->LookForward();
 		objectManager->Update(elapsedSeconds);
 
 		// Render the object
@@ -268,12 +301,6 @@ void GraphicsEnvironment::Run3D()
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / io.Framerate, io.Framerate);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
-		ImGui::SliderFloat("X Angle", &cubeXAngle, 0, 360);
-		ImGui::SliderFloat("Y Angle", &cubeYAngle, 0, 360);
-		ImGui::SliderFloat("Z Angle", &cubeZAngle, 0, 360);
-		ImGui::SliderFloat("Camera X", &cameraPosition.x, left, right);
-		ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
-		ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
