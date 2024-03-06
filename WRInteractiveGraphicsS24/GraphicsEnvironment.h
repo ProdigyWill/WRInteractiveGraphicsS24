@@ -23,6 +23,7 @@ private:
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 	static GraphicsEnvironment* self;
 	MouseParams mouse;
+	bool lookWithMouse = false;
 public:
 	GraphicsEnvironment();
 	~GraphicsEnvironment();

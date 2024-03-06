@@ -146,6 +146,33 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 		camera->LookDown(elapsedSeconds);
 		return;
 	}
+	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS) {
+		lookWithMouse = !lookWithMouse;
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+		lookWithMouse = false;
+		camera->SetPosition({ 0, 5, 30 });
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+		lookWithMouse = false;
+		camera->SetPosition({ 30, 5, 0 });
+		//camera->SetLookFrame();
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+		camera->SetPosition({});
+
+		lookWithMouse = false;
+		return;
+	}
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+		camera->SetPosition({ -30, 5, 0 });
+
+		lookWithMouse = false;
+		return;
+	}
 }
 
 void GraphicsEnvironment::OnMouseMove(GLFWwindow* window, double mouseX, double mouseY)
@@ -312,8 +339,12 @@ void GraphicsEnvironment::Run3D()
 		projection = glm::perspective(
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
+		if (lookWithMouse) {
+			camera->SetLookFrame(mouse.spherical.ToMat4());
+		}
+
 		self->mouse.windowHeight = height;
-		self->mouse.windowWidth = width;		
+		self->mouse.windowWidth = width;	
 		view = camera->LookForward();
 		objectManager->Update(elapsedSeconds);
 

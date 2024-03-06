@@ -219,22 +219,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	glfw.SetupGraphics();
 
-	//std::shared_ptr<Shader> shader;
-	//std::shared_ptr<Scene> scene;
-	//SetUpScene(shader, scene);
-
-	//std::shared_ptr<Shader> textureShader;
-	//std::shared_ptr<Scene> textureScene;
-	//SetUpTexturedScene(textureShader, textureScene);
-	
-	//glfw.CreateRenderer("basic", shader);
-	//glfw.GetRenderer("basic")->SetScene(scene);
-	//glfw.CreateRenderer("texture", textureShader);
-	//glfw.GetRenderer("texture")->SetScene(textureScene);
-	//glfw.StaticAllocate();
-
-	//glfw.Run2D();
-
 	std::shared_ptr<Shader> shader;
 	std::shared_ptr<Scene> scene;
 	std::shared_ptr<ObjectManager> objectManager = glfw.GetManager();
