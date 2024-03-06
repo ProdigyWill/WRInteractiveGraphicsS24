@@ -20,6 +20,7 @@
 #include "TextFile.h"
 #include "GraphicsEnvironment.h"
 #include "Generate.h"
+#include "ObjectManager.h"
 
 struct VertexData {
 	glm::vec3 position, color;
@@ -146,7 +147,7 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>& textureShader, std::shar
 	textureScene->AddObject(texturedObject2);
 }
 
-static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene) {
+static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene, std::shared_ptr<ObjectManager>& objectManager) {
 	TextFile textureVertexFile("texture.vert.glsl");
 	TextFile textureFragmentFile("texture.frag.glsl");
 
@@ -195,6 +196,10 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	scene->AddObject(texturedObject);
 	scene->AddObject(texturedObject2);
 	scene->AddObject(floor);
+
+	objectManager->SetObject("TextureObject1", texturedObject);
+	objectManager->SetObject("TextureObject2", texturedObject2);
+	objectManager->SetObject("floor", floor);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -232,7 +237,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	std::shared_ptr<Shader> shader;
 	std::shared_ptr<Scene> scene;
-	SetUp3DScene1(shader, scene);
+	std::shared_ptr<ObjectManager> objectManager = glfw.GetManager();
+	SetUp3DScene1(shader, scene, objectManager);
 
 	glfw.CreateRenderer("basic", shader);
 	glfw.GetRenderer("basic")->SetScene(scene);
