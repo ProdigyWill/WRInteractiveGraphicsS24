@@ -153,24 +153,25 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
 		lookWithMouse = false;
 		camera->SetPosition({ 0, 5, 30 });
+		camera->SetLookFrame(glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0, 1, 0)));
 		return;
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
 		lookWithMouse = false;
 		camera->SetPosition({ 30, 5, 0 });
-		//camera->SetLookFrame();
+		camera->SetLookFrame(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0)));
 		return;
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-		camera->SetPosition({});
-
 		lookWithMouse = false;
+		camera->SetPosition({ 0, 5, -30 });
+		camera->SetLookFrame(glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0)));
 		return;
 	}
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-		camera->SetPosition({ -30, 5, 0 });
-
 		lookWithMouse = false;
+		camera->SetPosition({ -30, 5, 0 });
+		camera->SetLookFrame(glm::rotate(glm::mat4(1.0f), glm::radians(270.0f), glm::vec3(0, 1, 0)));
 		return;
 	}
 }
