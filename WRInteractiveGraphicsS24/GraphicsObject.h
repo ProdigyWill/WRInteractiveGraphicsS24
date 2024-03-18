@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "VertexBuffer.h"
+#include "GraphicsStructures.h"
 
 class IAnimation;
 
@@ -14,6 +15,7 @@ protected:
 	GraphicsObject* parent;
 	std::vector<std::shared_ptr<GraphicsObject>> children;
 	std::shared_ptr<IAnimation> animation = nullptr;
+	Material material;
 
 public:
 	GraphicsObject();
@@ -21,6 +23,7 @@ public:
 
 	const glm::mat4 GetReferenceFrame() const;
 	glm::mat4& GetLocalReferenceFrame() { return referenceFrame; }
+	Material& GetMaterial() { return material; };
 	void CreateVertexBuffer(unsigned int numberOfElementsPerVertex);
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer);
 	void SetReferenceFrame(glm::mat4 referenceFrame);
