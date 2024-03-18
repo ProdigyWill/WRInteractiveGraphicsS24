@@ -187,6 +187,7 @@
   <ItemGroup>
     <Image Include="crate.jpg" />
     <Image Include="floor.jpg" />
+    <Image Include="lightbulb.png" />
     <Image Include="planet05.png" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 
 Scene::Scene()
 {
-	globalLight.position = glm::vec3(0.0f, 50.0f, 0.0f);
+	globalLight.position = glm::vec3(0.0f, 100.0f, 0.0f);
 	globalLight.color = glm::vec3(1.0f, 1.0f, 1.0f); // White light
 	globalLight.intensity = 0.05f;
 	globalLight.attenuationCoef = 0.0f;

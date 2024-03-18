@@ -28,6 +28,7 @@ public:
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer);
 	void SetReferenceFrame(glm::mat4 referenceFrame);
 	void SetAnimation(std::shared_ptr<IAnimation> animation);
+	void PointAt(glm::vec3 point);
 	inline const std::shared_ptr<VertexBuffer>& GetVertexBuffer() const {
 		return buffer;
 	}

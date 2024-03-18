@@ -163,6 +163,9 @@
     <Image Include="floor.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="lightbulb.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WRInteractiveGraphicsS24.rc">

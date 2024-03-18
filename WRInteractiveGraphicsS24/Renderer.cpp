@@ -42,7 +42,7 @@ void Renderer::RenderScene(const Camera& camera)
         shader->SendFloatUniform("localLightIntensity", localLight.intensity);
 
         // Send camera position to the GPU
-        shader->SendVec3Uniform("cameraPosition", camera.GetPosition());
+        shader->SendVec3Uniform("viewPosition", camera.GetPosition());
 
         // Render the objects in the scene
         for (auto& object : scene->GetObjects()) {

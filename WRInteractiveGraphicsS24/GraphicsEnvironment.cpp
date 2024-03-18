@@ -298,7 +298,10 @@ void GraphicsEnvironment::Run3D()
 
 	ImGuiIO& io = ImGui::GetIO();
 	double elapsedSeconds;
+	bool correctGamma = false;
 	Timer timer;
+	Light& localLight = GetRenderer("basic")->GetScene()->GetLocalLight();
+	Light& globalLight = GetRenderer("basic")->GetScene()->GetGlobalLight();
 
 	std::shared_ptr<RotateAnimation> rotateAnimation =
 		std::make_shared<RotateAnimation>();
@@ -316,12 +319,20 @@ void GraphicsEnvironment::Run3D()
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+		if (correctGamma) {
+			glEnable(GL_FRAMEBUFFER_SRGB);
+		}
+		else {
+			glDisable(GL_FRAMEBUFFER_SRGB);
+		}
+
 		if (width >= height) {
 			aspectRatio = width / (height * 1.0f);
 		}
 		else {
 			aspectRatio = height / (width * 1.0f);
 		}
+
 		projection = glm::perspective(
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
@@ -334,10 +345,16 @@ void GraphicsEnvironment::Run3D()
 		view = camera->LookForward();
 		objectManager->Update(elapsedSeconds);
 
+		objectManager->GetObject("light")->SetPosition(GetRenderer("basic")->GetScene()->GetLocalLight().position);
+		objectManager->GetObject("light")->PointAt(camera->GetPosition());
+
 		// Render the object
 		GetRenderer("basic")->SetProjection(projection);
 		GetRenderer("basic")->SetView(view);
 		GetRenderer("basic")->RenderScene(*camera);
+		GetRenderer("light")->SetProjection(projection);
+		GetRenderer("light")->SetView(view);
+		GetRenderer("light")->RenderScene(*camera);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -348,8 +365,10 @@ void GraphicsEnvironment::Run3D()
 			1000.0f / io.Framerate, io.Framerate);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
 		ImGui::Text("Mouse: (%.0f, %.0f)", mouse.x, mouse.y);
-		ImGui::SliderFloat("Global Intensity", &GetRenderer("basic")->GetScene()->GetGlobalLight().intensity, 0, 1);
-		ImGui::SliderFloat("Local Intensity", &GetRenderer("basic")->GetScene()->GetLocalLight().intensity, 0, 1);
+		ImGui::SliderFloat("Global Intensity", &globalLight.intensity, 0, 1);
+		ImGui::SliderFloat("Local Intensity", &localLight.intensity, 0, 1);
+		ImGui::DragFloat3("Local Light Position", &localLight.position.x);
+		ImGui::Checkbox("Correct gamma", &correctGamma);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

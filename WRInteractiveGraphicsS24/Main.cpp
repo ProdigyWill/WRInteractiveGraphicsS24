@@ -267,6 +267,30 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	objectManager->SetObject("floor", floor);
 }
 
+static void SetUpLightScene(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene, std::shared_ptr<ObjectManager>& objectManager) {
+	TextFile textureVertexFile("texture.vert.glsl");
+	TextFile textureFragmentFile("texture.frag.glsl");
+
+	shader = std::make_shared<Shader>(textureVertexFile.getData(), textureFragmentFile.getData());
+	shader->AddUniform("projection");
+	shader->AddUniform("world");
+	shader->AddUniform("view");
+	shader->AddUniform("texUnit");
+	scene = std::make_shared<Scene>();
+
+	std::shared_ptr<Texture> lightTexture = std::make_shared<Texture>();
+	lightTexture->LoadTextureDataFromFile("lightbulb.png");
+	std::shared_ptr<GraphicsObject> light = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> buffer = Generate::XYPlane(2.0f, 2.0f);
+	buffer->SetTexture(lightTexture);
+	light->SetVertexBuffer(buffer);
+	light->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	scene->AddObject(light);
+
+	objectManager->SetObject("light", light);
+}
+
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -292,6 +316,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	glfw.CreateRenderer("basic", shader);
 	glfw.GetRenderer("basic")->SetScene(scene);
+
+	std::shared_ptr<Shader> lightShader;
+	std::shared_ptr<Scene> lightScene;
+	SetUpLightScene(lightShader, lightScene, objectManager);
+
+	glfw.CreateRenderer("light", lightShader);
+	glfw.GetRenderer("light")->SetScene(lightScene);
+
 	glfw.StaticAllocate();
 
 	glfw.Run3D();

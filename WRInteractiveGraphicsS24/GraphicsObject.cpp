@@ -41,6 +41,18 @@ void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
 	this->animation = animation;
 }
 
+void GraphicsObject::PointAt(glm::vec3 point)
+{
+	glm::vec3 position = referenceFrame[3];
+	glm::vec3 zAxis = glm::normalize(point - position);
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 xAxis = glm::normalize(glm::cross(up, zAxis));
+	glm::vec3 yAxis = glm::cross(zAxis, xAxis);
+	referenceFrame[0] = glm::vec4(xAxis, 0.0f);
+	referenceFrame[1] = glm::vec4(yAxis, 0.0f);
+	referenceFrame[2] = glm::vec4(zAxis, 0.0f);
+}
+
 void GraphicsObject::StaticAllocateVertexBuffer()
 {
 	buffer->Select();
