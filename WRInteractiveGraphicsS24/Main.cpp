@@ -202,6 +202,72 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	objectManager->SetObject("floor", floor);
 }
 
+static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene, std::shared_ptr<ObjectManager>& objectManager) {
+	TextFile textureVertexFile("lighting.vert.glsl");
+	TextFile textureFragmentFile("lighting.frag.glsl");
+
+	shader = std::make_shared<Shader>(textureVertexFile.getData(), textureFragmentFile.getData());
+	shader->AddUniform("projection");
+	shader->AddUniform("world");
+	shader->AddUniform("view");
+	shader->AddUniform("texUnit");
+	shader->AddUniform("materialAmbientIntensity");
+	shader->AddUniform("materialSpecularIntensity");
+	shader->AddUniform("materialShininess");
+	shader->AddUniform("globalLightPosition");
+	shader->AddUniform("globalLightColor");
+	shader->AddUniform("globalLightIntensity");
+	shader->AddUniform("localLightPosition");
+	shader->AddUniform("localLightColor");
+	shader->AddUniform("localLightIntensity");
+	shader->AddUniform("localLightAttenuationCoef");
+	shader->AddUniform("viewPosition");
+	std::shared_ptr<Texture> sharedTexture = std::make_shared<Texture>();
+	sharedTexture->SetWidth(4);
+	sharedTexture->SetHeight(4);
+
+	// Create the texture data
+	unsigned char textureData[] = {
+		255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255,
+		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+		255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255
+	};
+	scene = std::make_shared<Scene>();
+
+	sharedTexture->SetTextureData(sizeof(textureData), textureData);
+	std::shared_ptr<GraphicsObject> texturedObject = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> buffer = Generate::CuboidNorm(10.0f, 5.0f, 5.0f);
+	buffer->SetTexture(sharedTexture);
+	texturedObject->SetVertexBuffer(buffer);
+	texturedObject->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	std::shared_ptr<Texture> sharedTexture2 = std::make_shared<Texture>();
+	sharedTexture2->LoadTextureDataFromFile("crate.jpg");
+	std::shared_ptr<GraphicsObject> texturedObject2 = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> buffer2 = Generate::CuboidNorm(5.0f, 5.0f, 5.0f);
+	buffer2->SetTexture(sharedTexture2);
+	texturedObject2->SetVertexBuffer(buffer2);
+	texturedObject2->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));
+
+	std::shared_ptr<Texture> floorTexture = std::make_shared<Texture>();
+	floorTexture->LoadTextureDataFromFile("floor.jpg");
+	std::shared_ptr<GraphicsObject> floor = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> floorBuffer = Generate::XZPlaneNorm(50.0f, 50.0f);
+	floorBuffer->SetTexture(floorTexture);
+	floor->SetVertexBuffer(floorBuffer);
+	floor->SetPosition(glm::vec3(0.0f, -2.5f, 0.0f));
+
+	scene->AddObject(texturedObject);
+	scene->AddObject(texturedObject2);
+	scene->AddObject(floor);
+
+	objectManager->SetObject("TextureObject1", texturedObject);
+	objectManager->SetObject("TextureObject2", texturedObject2);
+	objectManager->SetObject("floor", floor);
+}
+
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
@@ -222,7 +288,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	std::shared_ptr<Shader> shader;
 	std::shared_ptr<Scene> scene;
 	std::shared_ptr<ObjectManager> objectManager = glfw.GetManager();
-	SetUp3DScene1(shader, scene, objectManager);
+	SetUp3DScene2(shader, scene, objectManager);
 
 	glfw.CreateRenderer("basic", shader);
 	glfw.GetRenderer("basic")->SetScene(scene);
