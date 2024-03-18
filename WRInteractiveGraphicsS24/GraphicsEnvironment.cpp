@@ -97,7 +97,7 @@ void GraphicsEnvironment::StaticAllocate()
 void GraphicsEnvironment::Render()
 {
 	for (const auto& pair : rendererMap) {
-		pair.second->RenderScene();
+		pair.second->RenderScene(*camera);
 	}
 }
 
@@ -248,11 +248,11 @@ void GraphicsEnvironment::Run2D()
 
 		GetRenderer("basic")->SetProjection(projection);
 		GetRenderer("basic")->SetView(view);
-		GetRenderer("basic")->RenderScene();
+		GetRenderer("basic")->RenderScene(*camera);
 
 		GetRenderer("texture")->SetProjection(projection);
 		GetRenderer("texture")->SetView(view);
-		GetRenderer("texture")->RenderScene();
+		GetRenderer("texture")->RenderScene(*camera);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -283,13 +283,6 @@ void GraphicsEnvironment::Run2D()
 
 void GraphicsEnvironment::Run3D()
 {
-	//float cubeYAngle = 0;
-	//float cubeXAngle = 0;
-	//float cubeZAngle = 0;
-	//float left = -20.0f;
-	//float right = 20.0f;
-	//float bottom = -20.0f;
-	//float top = 20.0f;
 	int width, height;
 	float aspectRatio;
 	float nearPlane = 1.0f;
@@ -323,14 +316,6 @@ void GraphicsEnvironment::Run3D()
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		//// Update the objects in the scene
-		//for (auto& object : GetRenderer("basic")->GetScene()->GetObjects()) {
-		//	object->ResetOrientation();
-		//	object->RotateLocalX(cubeXAngle);
-		//	object->RotateLocalY(cubeYAngle);
-		//	object->RotateLocalZ(cubeZAngle);
-		//}
-
 		if (width >= height) {
 			aspectRatio = width / (height * 1.0f);
 		}
@@ -352,7 +337,7 @@ void GraphicsEnvironment::Run3D()
 		// Render the object
 		GetRenderer("basic")->SetProjection(projection);
 		GetRenderer("basic")->SetView(view);
-		GetRenderer("basic")->RenderScene();
+		GetRenderer("basic")->RenderScene(*camera);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -363,6 +348,8 @@ void GraphicsEnvironment::Run3D()
 			1000.0f / io.Framerate, io.Framerate);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
 		ImGui::Text("Mouse: (%.0f, %.0f)", mouse.x, mouse.y);
+		ImGui::SliderFloat("Global Intensity", &GetRenderer("basic")->GetScene()->GetGlobalLight().intensity, 0, 1);
+		ImGui::SliderFloat("Local Intensity", &GetRenderer("basic")->GetScene()->GetLocalLight().intensity, 0, 1);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -42,9 +42,21 @@ void Shader::SendMat4Uniform(const std::string& uniformName, const glm::mat4& ma
 void Shader::SendIntUniform(const std::string& uniformName, int value)
 {
     glUseProgram(shaderProgram);
-    //int uniformLocation = glGetUniformLocation(shaderProgram, uniformName.c_str());
     glUniform1i(uniformMap[uniformName], value);
 }
+
+void Shader::SendVec3Uniform(const std::string& uniformName, const glm::vec3& vec)
+{
+    glUseProgram(shaderProgram);
+    glUniform3fv(uniformMap[uniformName], 1, glm::value_ptr(vec));
+}
+
+void Shader::SendFloatUniform(const std::string& uniformName, float value)
+{
+    glUseProgram(shaderProgram);
+    glUniform1f(uniformMap[uniformName], value);
+}
+
 
 void Shader::SetDefaultSource()
 {
