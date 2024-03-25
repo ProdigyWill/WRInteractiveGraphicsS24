@@ -291,6 +291,15 @@ static void SetUpLightScene(std::shared_ptr<Shader>& shader, std::shared_ptr<Sce
 	objectManager->SetObject("light", light);
 }
 
+static void SetUpPCObjectsScene(
+	std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene,
+	GraphicsEnvironment& env) {
+	TextFile basicVertexFile("texture.vert.glsl");
+	TextFile basicFragmentFile("texture.frag.glsl");
+
+	shader = std::make_shared<Shader>(basicVertexFile.getData(), basicFragmentFile.getData());
+}
+
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,

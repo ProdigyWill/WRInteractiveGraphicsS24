@@ -82,18 +82,26 @@ void Renderer::RenderObject(GraphicsObject& object)
     shader->SendFloatUniform("materialSpecularIntensity", material.specularIntensity);
     shader->SendFloatUniform("materialShininess", material.shininess);
 
-	if (buffer->HasTexture())
-	{
-		shader->SendIntUniform("texUnit", buffer->GetTextureUnit());
-		buffer->GetTexture()->SelectToRender(buffer->GetTextureUnit());
-	}
+    if (buffer->HasTexture())
+    {
+        shader->SendIntUniform("texUnit", buffer->GetTextureUnit());
+        buffer->GetTexture()->SelectToRender(buffer->GetTextureUnit());
+    }
 
-	buffer->SetUpAttributeInterpretration();
-	glDrawArrays(buffer->GetPrimitiveType(), 0, buffer->GetNumberOfVertices());
+    buffer->SetUpAttributeInterpretration();
 
-	// Recursively render the children
-	auto& children = object.GetChildren();
-	for (auto& child : children) {
-		RenderObject(*child);
-	}
+    if (object.IsIndexed()) {
+        auto& indexBuffer = object.GetIndexBuffer();
+        glDrawElements(buffer->GetPrimitiveType(), indexBuffer->GetNumberOfVertices(),
+            GL_UNSIGNED_SHORT, (void*)0);
+    }
+    else {
+        glDrawArrays(buffer->GetPrimitiveType(), 0, buffer->GetNumberOfVertices());
+    }
+
+    // Recursively render the children
+    auto& children = object.GetChildren();
+    for (auto& child : children) {
+        RenderObject(*child);
+    }
 }

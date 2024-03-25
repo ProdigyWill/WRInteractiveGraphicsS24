@@ -26,6 +26,11 @@ void GraphicsObject::CreateVertexBuffer(unsigned int numberOfElementsPerVertex)
 	buffer = std::make_shared<VertexBuffer>(numberOfElementsPerVertex);
 }
 
+void GraphicsObject::CreateIndexBuffer()
+{
+	indexBuffer = std::make_shared<IndexBuffer>();
+}
+
 void GraphicsObject::SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer)
 {
 	this->buffer = buffer;
@@ -58,6 +63,11 @@ void GraphicsObject::StaticAllocateVertexBuffer()
 	buffer->Select();
 	buffer->StaticAllocate();
 	buffer->Deselect();
+	if (IsIndexed()) {
+		indexBuffer->Select();
+		indexBuffer->StaticAllocate();
+		indexBuffer->Deselect();
+	}
 	for (auto& child : children) {
 		child->StaticAllocateVertexBuffer();
 	}

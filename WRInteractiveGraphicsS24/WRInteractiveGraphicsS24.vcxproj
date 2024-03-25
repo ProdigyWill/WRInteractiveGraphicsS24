@@ -147,6 +147,7 @@
     <ClCompile Include="GraphicsEnvironment.cpp" />
     <ClCompile Include="GraphicsObject.cpp" />
     <ClCompile Include="IAnimation.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="GraphicsObject.h" />
     <ClInclude Include="GraphicsStructures.h" />
     <ClInclude Include="IAnimation.h" />
+    <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />

@@ -2,6 +2,7 @@
 #include <memory>
 #include "VertexBuffer.h"
 #include <glm.hpp>
+#include "IndexBuffer.h"
 class Generate
 {
 public:
@@ -25,5 +26,13 @@ public:
 		float width, float height,
 		glm::vec3 color = { 1.0f, 1.0f, 1.0f },
 		glm::vec2 tex = { 1.0f, 1.0 });
+	static void GenerateXZCircle(
+		float radius,
+		int steps,
+		std::shared_ptr<VertexBuffer> buffer,
+		glm::vec3 color = { 1.0f, 1.0f, 1.0f });
+	static void LineCircleIndexes(
+		std::shared_ptr<IndexBuffer>& bufferToFill,
+		int numberOfLineSegments, bool isClosed = true);
 };
 
