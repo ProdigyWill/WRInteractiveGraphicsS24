@@ -8,6 +8,7 @@ protected:
 	glm::mat4 lookFrame;
 	int speed = 10;
 public:
+	inline glm::vec3 GetPosition() const { return referenceFrame[3]; };
 	void SetLookFrame(glm::mat4 lookFrame);
 	void SetSpeed(int speed);
 	void SetPosition(glm::vec3 pos);

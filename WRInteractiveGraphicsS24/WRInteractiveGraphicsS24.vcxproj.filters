@@ -150,6 +150,8 @@
   <ItemGroup>
     <None Include="texture.frag.glsl" />
     <None Include="texture.vert.glsl" />
+    <None Include="lighting.frag.glsl" />
+    <None Include="lighting.vert.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="planet05.png">
@@ -159,6 +161,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="floor.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="lightbulb.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
