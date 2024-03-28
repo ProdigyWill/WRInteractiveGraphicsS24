@@ -355,6 +355,9 @@ void GraphicsEnvironment::Run3D()
 		GetRenderer("light")->SetProjection(projection);
 		GetRenderer("light")->SetView(view);
 		GetRenderer("light")->RenderScene(*camera);
+		GetRenderer("circle")->SetProjection(projection);
+		GetRenderer("circle")->SetView(view);
+		GetRenderer("circle")->RenderScene(*camera);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
