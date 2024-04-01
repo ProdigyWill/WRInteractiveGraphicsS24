@@ -301,21 +301,22 @@ static void SetUpPCObjectsScene(
 	shader->AddUniform("projection");
 	shader->AddUniform("world");
 	shader->AddUniform("view");
+	scene = std::make_shared<Scene>();
 
 	std::shared_ptr<GraphicsObject> pcLinesCircle = std::make_shared<GraphicsObject>();
 	pcLinesCircle->CreateIndexBuffer();
-	std::shared_ptr<VertexBuffer> pcCircleBuffer = std::make_shared<VertexBuffer>();
-
+	std::shared_ptr<VertexBuffer> pcCircleBuffer = std::make_shared<VertexBuffer>(6);
 	pcCircleBuffer->SetPrimitiveType(GL_LINES);
 	
-	Generate::GenerateXZCircle(1.0f, 10, pcCircleBuffer, glm::vec3(1.0f, 0.0f, 0.0f));
+	Generate::GenerateXZCircle(3.0f, 6, pcCircleBuffer);
 	std::shared_ptr<IndexBuffer> pcCircleIndexBuffer = pcLinesCircle->GetIndexBuffer();
-	Generate::LineCircleIndexes(pcCircleIndexBuffer, 10, true);
+	Generate::LineCircleIndexes(pcCircleIndexBuffer, 60, true);
 
 	pcLinesCircle->SetVertexBuffer(pcCircleBuffer);
-
-	pcLinesCircle->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
+	pcLinesCircle->SetPosition(glm::vec3(0.0f, -2.0f, 7.0f));
 	scene->AddObject(pcLinesCircle);
+
+	env.AddObject("circle", pcLinesCircle);
 }
 
 
@@ -354,6 +355,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	std::shared_ptr<Shader> circleShader;
 	std::shared_ptr<Scene> circleScene;
 	SetUpPCObjectsScene(circleShader, circleScene, glfw);
+
+	glfw.CreateRenderer("circle", circleShader);
+	glfw.GetRenderer("circle")->SetScene(circleScene);
 
 	glfw.StaticAllocate();
 

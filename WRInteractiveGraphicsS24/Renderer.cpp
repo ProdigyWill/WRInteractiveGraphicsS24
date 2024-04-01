@@ -92,7 +92,8 @@ void Renderer::RenderObject(GraphicsObject& object)
 
     if (object.IsIndexed()) {
         auto& indexBuffer = object.GetIndexBuffer();
-        glDrawElements(buffer->GetPrimitiveType(), indexBuffer->GetNumberOfVertices(),
+        indexBuffer->Select();
+        glDrawElements(buffer->GetPrimitiveType(), indexBuffer->GetNumberOfIndexes(),
             GL_UNSIGNED_SHORT, (void*)0);
     }
     else {

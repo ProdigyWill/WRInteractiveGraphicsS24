@@ -305,8 +305,8 @@ void GraphicsEnvironment::Run3D()
 
 	std::shared_ptr<RotateAnimation> rotateAnimation =
 		std::make_shared<RotateAnimation>();
-	rotateAnimation->SetObject(objectManager->GetObject("TextureObject2"));
-	objectManager->GetObject("TextureObject2")->SetAnimation(rotateAnimation);
+	rotateAnimation->SetObject(objectManager->GetObject("crate"));
+	objectManager->GetObject("crate")->SetAnimation(rotateAnimation);
 
 	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
 	camera->SetLookFrame(glm::mat4(1.0f));

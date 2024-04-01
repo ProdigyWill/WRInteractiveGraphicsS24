@@ -34,5 +34,14 @@ public:
 	static void LineCircleIndexes(
 		std::shared_ptr<IndexBuffer>& bufferToFill,
 		int numberOfLineSegments, bool isClosed = true);
+	static void GenerateCylinder(
+		float radius,
+		int steps,
+		float height,
+		std::shared_ptr<VertexBuffer> buffer,
+		glm::vec3 color = { 1.0f, 1.0f, 1.0f });
+	static void LineCylinderIndexes(
+		std::shared_ptr<IndexBuffer>& bufferToFill,
+		int numberOfLineSegments, bool isClosed = true);
 };
 

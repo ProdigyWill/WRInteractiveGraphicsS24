@@ -9,7 +9,6 @@ class IndexBuffer
 protected:
 	unsigned int iboId;
 	std::vector<unsigned short> indexData;
-	unsigned int numberOfIndexes;
 public:
 	IndexBuffer();
 	~IndexBuffer();
@@ -17,7 +16,7 @@ public:
 	inline void Select() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId); }
 	inline void Deselect() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
 	inline const std::vector<unsigned short>& GetIndexData() { return indexData; }
-	inline unsigned int GetNumberOfVertices() const { return numberOfIndexes; }
+	inline unsigned int GetNumberOfIndexes() const { return indexData.size(); }
 	void AddIndexData(unsigned int count, ...);
 	void AddIndexData(unsigned short index);
 	void StaticAllocate();
