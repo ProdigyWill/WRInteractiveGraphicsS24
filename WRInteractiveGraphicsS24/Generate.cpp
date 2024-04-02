@@ -201,7 +201,7 @@ void Generate::LineCircleIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int
 
 void Generate::GenerateCylinder(float radius, int steps, float height, std::shared_ptr<VertexBuffer> buffer, glm::vec3 color)
 {
-	float x, z, thetaRadians, halfHeight=height;
+	float x, z, thetaRadians, halfHeight=height/2;
 	//Top Circle
 	for (float theta = 0.0f; theta < 360; theta += steps) {
 		thetaRadians = glm::radians(theta);
@@ -223,20 +223,24 @@ void Generate::GenerateCylinder(float radius, int steps, float height, std::shar
 void Generate::LineCylinderIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int numberOfLineSegments, bool isClosed)
 {
 	unsigned short nextIndex;
-	if (isClosed)
-	{
-		for (unsigned short index = 0; index < numberOfLineSegments; index++) {
-			bufferToFill->AddIndexData(index);
-			nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments);
-			bufferToFill->AddIndexData(nextIndex);
-		}
+	int halfNumberOfLineSegments = numberOfLineSegments / 2;
+	for (unsigned short index = 0; index < halfNumberOfLineSegments; index++) {
+		bufferToFill->AddIndexData(index);
+		nextIndex = (index + 1) % static_cast<unsigned short>(halfNumberOfLineSegments);
+		bufferToFill->AddIndexData(nextIndex);
 	}
-	else {
-		for (unsigned short index = 0; index < numberOfLineSegments - 1; index++) {
-			bufferToFill->AddIndexData(index);
-			nextIndex = index + 1;
-			bufferToFill->AddIndexData(nextIndex);
-		}
+
+	for (unsigned short index = halfNumberOfLineSegments; index < numberOfLineSegments; index++) {
+		bufferToFill->AddIndexData(index);
+		nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments);
+		if (nextIndex == 0) { nextIndex = halfNumberOfLineSegments; }
+		bufferToFill->AddIndexData(nextIndex);
+	}
+
+	for (unsigned short index = 0; index < halfNumberOfLineSegments; index++) {
+		bufferToFill->AddIndexData(index);
+		nextIndex = index + halfNumberOfLineSegments;
+		bufferToFill->AddIndexData(nextIndex);
 	}
 }
 

@@ -303,20 +303,37 @@ static void SetUpPCObjectsScene(
 	shader->AddUniform("view");
 	scene = std::make_shared<Scene>();
 
+	//Circle Object
 	std::shared_ptr<GraphicsObject> pcLinesCircle = std::make_shared<GraphicsObject>();
-	pcLinesCircle->CreateIndexBuffer();
 	std::shared_ptr<VertexBuffer> pcCircleBuffer = std::make_shared<VertexBuffer>(6);
+	pcLinesCircle->CreateIndexBuffer();
 	pcCircleBuffer->SetPrimitiveType(GL_LINES);
 	
-	Generate::GenerateXZCircle(3.0f, 6, pcCircleBuffer);
+	Generate::GenerateXZCircle(3.0f, 60, pcCircleBuffer);
 	std::shared_ptr<IndexBuffer> pcCircleIndexBuffer = pcLinesCircle->GetIndexBuffer();
-	Generate::LineCircleIndexes(pcCircleIndexBuffer, 60, true);
+	Generate::LineCircleIndexes(pcCircleIndexBuffer, 6, true);
 
 	pcLinesCircle->SetVertexBuffer(pcCircleBuffer);
 	pcLinesCircle->SetPosition(glm::vec3(0.0f, -2.0f, 7.0f));
-	scene->AddObject(pcLinesCircle);
 
+	scene->AddObject(pcLinesCircle);
 	env.AddObject("circle", pcLinesCircle);
+
+	//Cyclinder Object
+	std::shared_ptr<GraphicsObject> pcLinesCylinder = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> pcCylinderBuffer = std::make_shared<VertexBuffer>(6);
+	pcLinesCylinder->CreateIndexBuffer();
+	pcCylinderBuffer->SetPrimitiveType(GL_LINES);
+
+	Generate::GenerateCylinder(2.0f, 6, 5, pcCylinderBuffer);
+	std::shared_ptr<IndexBuffer> pcCylinderIndexBuffer = pcLinesCylinder->GetIndexBuffer();
+	Generate::LineCylinderIndexes(pcCylinderIndexBuffer, 120);
+
+	pcLinesCylinder->SetVertexBuffer(pcCylinderBuffer);
+	pcLinesCylinder->SetPosition(glm::vec3(10.0f, 1.0f, 7.0f));
+	
+	scene->AddObject(pcLinesCylinder);
+	env.AddObject("cylinder", pcLinesCylinder);
 }
 
 
