@@ -1,16 +1,25 @@
 #include "GraphicsObject.h"
 #include "IAnimation.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "BoundingBox.h"
+#include "Ray.h"
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {
 	material.ambientIntensity = 0.2f;
 	material.specularIntensity = 0.5f;
 	material.shininess = 32.0f;
+	CreateBoundingBox(1.0f, 1.0f, 1.0f);
 }
 
 GraphicsObject::~GraphicsObject()
 {
+}
+
+bool GraphicsObject::IsIntersectingWithRay(const Ray& ray) const 
+{
+	boundingBox->SetReferenceFrame(referenceFrame);
+	return boundingBox->IsIntersectingWithRay(ray);
 }
 
 const glm::mat4 GraphicsObject::GetReferenceFrame() const
@@ -56,6 +65,13 @@ void GraphicsObject::PointAt(glm::vec3 point)
 	referenceFrame[0] = glm::vec4(xAxis, 0.0f);
 	referenceFrame[1] = glm::vec4(yAxis, 0.0f);
 	referenceFrame[2] = glm::vec4(zAxis, 0.0f);
+}
+
+void GraphicsObject::CreateBoundingBox(float width, float height, float depth) 
+{
+	boundingBox = std::make_shared<BoundingBox>();
+	boundingBox->SetReferenceFrame(referenceFrame);
+	boundingBox->Create(width, height, depth);
 }
 
 void GraphicsObject::StaticAllocateVertexBuffer()

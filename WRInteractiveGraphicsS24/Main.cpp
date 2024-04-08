@@ -241,6 +241,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	buffer->SetTexture(sharedTexture);
 	texturedObject->SetVertexBuffer(buffer);
 	texturedObject->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	texturedObject->CreateBoundingBox(10.0f, 5.0f, 5.0f);
 
 	std::shared_ptr<Texture> crateTexture = std::make_shared<Texture>();
 	crateTexture->LoadTextureDataFromFile("crate.jpg");
@@ -249,6 +250,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	crateBuffer->SetTexture(crateTexture);
 	crate->SetVertexBuffer(crateBuffer);
 	crate->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));
+	crate->CreateBoundingBox(5.0f, 5.0f, 5.0f);
 
 	std::shared_ptr<Texture> floorTexture = std::make_shared<Texture>();
 	floorTexture->LoadTextureDataFromFile("floor.jpg");

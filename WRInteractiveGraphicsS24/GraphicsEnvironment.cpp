@@ -333,7 +333,7 @@ void GraphicsEnvironment::Run3D()
 	glm::vec3 rayDir{};
 	GeometricPlane plane;
 	plane.SetDistanceFromOrigin(objectManager->GetObject("floor")->GetReferenceFrame()[3].y);
-	Intersection intersection;
+	Intersection planeIntersection;
 
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
@@ -364,13 +364,31 @@ void GraphicsEnvironment::Run3D()
 		ray.Create((float)mouse.normalizedX, (float)mouse.normalizedY, projection, view);
 		rayStart = ray.GetStart();
 		rayDir = ray.GetDirection();
-		intersection = ray.GetIntersectionWithPlane(plane);
+		planeIntersection = ray.GetIntersectionWithPlane(plane);
 
-		if (intersection.isIntersecting) {
-			objectManager->GetObject("cylinder")->SetPosition({ intersection.point.x, 0.0f, intersection.point.z });
+		if (planeIntersection.isIntersecting) {
+			objectManager->GetObject("cylinder")->SetPosition({ planeIntersection.point.x, 0.0f, planeIntersection.point.z });
+
 		}
 		else {
 			objectManager->GetObject("cylinder")->SetPosition({ 10.0f, 0.0f, 7.0f });
+		}
+
+		bool isIntersectingWithTexturedCube = objectManager->GetObject("TextureObject1")->IsIntersectingWithRay(ray);
+
+		if (isIntersectingWithTexturedCube) {
+			objectManager->GetObject("TextureObject1")->GetMaterial().ambientIntensity = 1.0f;
+		}
+		else {
+			objectManager->GetObject("TextureObject1")->GetMaterial().ambientIntensity = 0.0f;
+		}
+
+		bool isIntersectingWithCrate = objectManager->GetObject("crate")->IsIntersectingWithRay(ray);
+		if (isIntersectingWithCrate) {
+			objectManager->GetObject("crate")->GetMaterial().ambientIntensity = 1.0f;
+		}
+		else {
+			objectManager->GetObject("crate")->GetMaterial().ambientIntensity = 0.0f;
 		}
 
 		if (lookWithMouse) {
