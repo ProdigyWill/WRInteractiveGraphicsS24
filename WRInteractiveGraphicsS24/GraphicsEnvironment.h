@@ -14,6 +14,7 @@
 #include "ObjectManager.h"
 #include "Camera.h"
 #include "GraphicsStructures.h"
+#include "Ray.h"
 class GraphicsEnvironment : public BaseObject
 {
 private:
@@ -40,6 +41,7 @@ public:
 	void ProcessInput(GLFWwindow* window, double elapsedSeconds);
 	static void OnMouseMove(GLFWwindow* window, double mouseX, double mouseY);
 	static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
+	Ray GetMouseRay(const glm::mat4& projection, const glm::mat4& view);
 	void Run2D();
 	void Run3D();
 	void AddObject(const std::string& name, std::shared_ptr<GraphicsObject> object);
