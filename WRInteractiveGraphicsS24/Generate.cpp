@@ -165,3 +165,82 @@ std::shared_ptr<VertexBuffer> Generate::XYPlane(float width, float height, glm::
 	buffer->AddVertexAttribute("texCoord", 2, 2, 6);
 	return buffer;
 }
+
+void Generate::GenerateXZCircle(float radius, int steps, std::shared_ptr<VertexBuffer> buffer, glm::vec3 color)
+{
+	float x, z, thetaRadians;
+	for (float theta = 0.0f; theta < 360; theta += steps) {
+		thetaRadians = glm::radians(theta);
+		x = radius * cosf(thetaRadians);
+		z = radius * sinf(thetaRadians);
+		buffer->AddVertexData(6, x, 0.0f, z, color.r, color.g, color.b);
+	}
+	buffer->AddVertexAttribute("position", 0, 3, 0);
+	buffer->AddVertexAttribute("vertexColor", 1, 3, 3);
+}
+
+void Generate::LineCircleIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int numberOfLineSegments, bool isClosed)
+{
+	unsigned short nextIndex;
+	if (isClosed)
+	{
+		for (unsigned short index = 0; index < numberOfLineSegments; index++) {
+			bufferToFill->AddIndexData(index);
+			nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments);
+			bufferToFill->AddIndexData(nextIndex);
+		}
+	}
+	else {
+		for (unsigned short index = 0; index < numberOfLineSegments - 1; index++) {
+			bufferToFill->AddIndexData(index);
+			nextIndex = index + 1;
+			bufferToFill->AddIndexData(nextIndex);
+		}
+	}
+}
+
+void Generate::GenerateCylinder(float radius, int steps, float height, std::shared_ptr<VertexBuffer> buffer, glm::vec3 color)
+{
+	float x, z, thetaRadians, halfHeight=height/2;
+	//Top Circle
+	for (float theta = 0.0f; theta < 360; theta += steps) {
+		thetaRadians = glm::radians(theta);
+		x = radius * cosf(thetaRadians);
+		z = radius * sinf(thetaRadians);
+		buffer->AddVertexData(6, x, halfHeight, z, color.r, color.g, color.b);
+	}
+	//Bottom Circle
+	for (float theta = 0.0f; theta < 360; theta += steps) {
+		thetaRadians = glm::radians(theta);
+		x = radius * cosf(thetaRadians);
+		z = radius * sinf(thetaRadians);
+		buffer->AddVertexData(6, x, -halfHeight, z, color.r, color.g, color.b);
+	}
+	buffer->AddVertexAttribute("position", 0, 3, 0);
+	buffer->AddVertexAttribute("vertexColor", 1, 3, 3);
+}
+
+void Generate::LineCylinderIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int numberOfLineSegments, bool isClosed)
+{
+	unsigned short nextIndex;
+	int halfNumberOfLineSegments = numberOfLineSegments / 2;
+	for (unsigned short index = 0; index < halfNumberOfLineSegments; index++) {
+		bufferToFill->AddIndexData(index);
+		nextIndex = (index + 1) % static_cast<unsigned short>(halfNumberOfLineSegments);
+		bufferToFill->AddIndexData(nextIndex);
+	}
+
+	for (unsigned short index = halfNumberOfLineSegments; index < numberOfLineSegments; index++) {
+		bufferToFill->AddIndexData(index);
+		nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments);
+		if (nextIndex == 0) { nextIndex = halfNumberOfLineSegments; }
+		bufferToFill->AddIndexData(nextIndex);
+	}
+
+	for (unsigned short index = 0; index < halfNumberOfLineSegments; index++) {
+		bufferToFill->AddIndexData(index);
+		nextIndex = index + halfNumberOfLineSegments;
+		bufferToFill->AddIndexData(nextIndex);
+	}
+}
+

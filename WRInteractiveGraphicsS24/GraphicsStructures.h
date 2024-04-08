@@ -27,6 +27,7 @@ struct SphericalCoordinate {
 struct MouseParams {
     SphericalCoordinate spherical{};
     double x = 0, y = 0;
+    double normalizedX = 0, normalizedY = 0;
     double windowX = 0, windowY = 0;
     int windowWidth = 0, windowHeight = 0;
     float fieldOfView = 60.0f;

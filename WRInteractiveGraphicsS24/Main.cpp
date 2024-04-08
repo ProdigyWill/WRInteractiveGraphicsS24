@@ -242,13 +242,13 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	texturedObject->SetVertexBuffer(buffer);
 	texturedObject->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	std::shared_ptr<Texture> sharedTexture2 = std::make_shared<Texture>();
-	sharedTexture2->LoadTextureDataFromFile("crate.jpg");
-	std::shared_ptr<GraphicsObject> texturedObject2 = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> buffer2 = Generate::CuboidNorm(5.0f, 5.0f, 5.0f);
-	buffer2->SetTexture(sharedTexture2);
-	texturedObject2->SetVertexBuffer(buffer2);
-	texturedObject2->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));
+	std::shared_ptr<Texture> crateTexture = std::make_shared<Texture>();
+	crateTexture->LoadTextureDataFromFile("crate.jpg");
+	std::shared_ptr<GraphicsObject> crate = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> crateBuffer = Generate::CuboidNorm(5.0f, 5.0f, 5.0f);
+	crateBuffer->SetTexture(crateTexture);
+	crate->SetVertexBuffer(crateBuffer);
+	crate->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));
 
 	std::shared_ptr<Texture> floorTexture = std::make_shared<Texture>();
 	floorTexture->LoadTextureDataFromFile("floor.jpg");
@@ -259,11 +259,11 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	floor->SetPosition(glm::vec3(0.0f, -2.5f, 0.0f));
 
 	scene->AddObject(texturedObject);
-	scene->AddObject(texturedObject2);
+	scene->AddObject(crate);
 	scene->AddObject(floor);
 
 	objectManager->SetObject("TextureObject1", texturedObject);
-	objectManager->SetObject("TextureObject2", texturedObject2);
+	objectManager->SetObject("crate", crate);
 	objectManager->SetObject("floor", floor);
 }
 
@@ -289,6 +289,51 @@ static void SetUpLightScene(std::shared_ptr<Shader>& shader, std::shared_ptr<Sce
 	scene->AddObject(light);
 
 	objectManager->SetObject("light", light);
+}
+
+static void SetUpPCObjectsScene(
+	std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene,
+	GraphicsEnvironment& env) {
+	TextFile basicVertexFile("basic.vert.glsl");
+	TextFile basicFragmentFile("basic.frag.glsl");
+
+	shader = std::make_shared<Shader>(basicVertexFile.getData(), basicFragmentFile.getData());
+	shader->AddUniform("projection");
+	shader->AddUniform("world");
+	shader->AddUniform("view");
+	scene = std::make_shared<Scene>();
+
+	//Circle Object
+	std::shared_ptr<GraphicsObject> pcLinesCircle = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> pcCircleBuffer = std::make_shared<VertexBuffer>(6);
+	pcLinesCircle->CreateIndexBuffer();
+	pcCircleBuffer->SetPrimitiveType(GL_LINES);
+	
+	Generate::GenerateXZCircle(3.0f, 60, pcCircleBuffer);
+	std::shared_ptr<IndexBuffer> pcCircleIndexBuffer = pcLinesCircle->GetIndexBuffer();
+	Generate::LineCircleIndexes(pcCircleIndexBuffer, 6, true);
+
+	pcLinesCircle->SetVertexBuffer(pcCircleBuffer);
+	pcLinesCircle->SetPosition(glm::vec3(0.0f, -2.0f, 7.0f));
+
+	scene->AddObject(pcLinesCircle);
+	env.AddObject("circle", pcLinesCircle);
+
+	//Cyclinder Object
+	std::shared_ptr<GraphicsObject> pcLinesCylinder = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> pcCylinderBuffer = std::make_shared<VertexBuffer>(6);
+	pcLinesCylinder->CreateIndexBuffer();
+	pcCylinderBuffer->SetPrimitiveType(GL_LINES);
+
+	Generate::GenerateCylinder(2.0f, 6, 5, pcCylinderBuffer);
+	std::shared_ptr<IndexBuffer> pcCylinderIndexBuffer = pcLinesCylinder->GetIndexBuffer();
+	Generate::LineCylinderIndexes(pcCylinderIndexBuffer, 120);
+
+	pcLinesCylinder->SetVertexBuffer(pcCylinderBuffer);
+	pcLinesCylinder->SetPosition(glm::vec3(10.0f, 1.0f, 7.0f));
+	
+	scene->AddObject(pcLinesCylinder);
+	env.AddObject("cylinder", pcLinesCylinder);
 }
 
 
@@ -323,6 +368,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	glfw.CreateRenderer("light", lightShader);
 	glfw.GetRenderer("light")->SetScene(lightScene);
+
+	std::shared_ptr<Shader> circleShader;
+	std::shared_ptr<Scene> circleScene;
+	SetUpPCObjectsScene(circleShader, circleScene, glfw);
+
+	glfw.CreateRenderer("circle", circleShader);
+	glfw.GetRenderer("circle")->SetScene(circleScene);
 
 	glfw.StaticAllocate();
 

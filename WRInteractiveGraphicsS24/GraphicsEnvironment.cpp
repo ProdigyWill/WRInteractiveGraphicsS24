@@ -181,6 +181,9 @@ void GraphicsEnvironment::OnMouseMove(GLFWwindow* window, double mouseX, double 
 	self->mouse.x = mouseX;
 	self->mouse.y = mouseY;
 
+	self->mouse.normalizedX = (2.0 * self->mouse.x) / self->mouse.windowWidth - 1.0;
+	self->mouse.normalizedY = 1.0 - (2.0 * self->mouse.y) / self->mouse.windowHeight;
+
 	float xPercent = static_cast<float>(self->mouse.x / self->mouse.windowWidth);
 	float yPercent = static_cast<float>(self->mouse.y / self->mouse.windowHeight);
 
@@ -202,6 +205,20 @@ glm::mat4 GraphicsEnvironment::CreateViewMatrix(const glm::vec3& position, const
 	view[2] = glm::vec4(direction, 0.0f);
 	view[3] = glm::vec4(position, 1.0f);
 	return glm::inverse(view);
+}
+
+Ray GraphicsEnvironment::GetMouseRay(const glm::mat4& projection, const glm::mat4& view)
+{
+	Ray ray;
+
+	// Convert mouse screen coordinates to clip space
+	float rayX = (2.0f * mouse.normalizedX) - 1.0f;
+	float rayY = 1.0f - (2.0f * mouse.normalizedY);
+
+	// Create ray
+	ray.Create(rayX, rayY, projection, view);
+
+	return ray;
 }
 
 void GraphicsEnvironment::Run2D()
@@ -305,11 +322,18 @@ void GraphicsEnvironment::Run3D()
 
 	std::shared_ptr<RotateAnimation> rotateAnimation =
 		std::make_shared<RotateAnimation>();
-	rotateAnimation->SetObject(objectManager->GetObject("TextureObject2"));
-	objectManager->GetObject("TextureObject2")->SetAnimation(rotateAnimation);
+	rotateAnimation->SetObject(objectManager->GetObject("crate"));
+	objectManager->GetObject("crate")->SetAnimation(rotateAnimation);
 
 	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
 	camera->SetLookFrame(glm::mat4(1.0f));
+
+	Ray ray;
+	glm::vec3 rayStart{};
+	glm::vec3 rayDir{};
+	GeometricPlane plane;
+	plane.SetDistanceFromOrigin(objectManager->GetObject("floor")->GetReferenceFrame()[3].y);
+	Intersection intersection;
 
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
@@ -336,6 +360,19 @@ void GraphicsEnvironment::Run3D()
 		projection = glm::perspective(
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
+		// Set up the ray
+		ray.Create((float)mouse.normalizedX, (float)mouse.normalizedY, projection, view);
+		rayStart = ray.GetStart();
+		rayDir = ray.GetDirection();
+		intersection = ray.GetIntersectionWithPlane(plane);
+
+		if (intersection.isIntersecting) {
+			objectManager->GetObject("cylinder")->SetPosition({ intersection.point.x, 0.0f, intersection.point.z });
+		}
+		else {
+			objectManager->GetObject("cylinder")->SetPosition({ 10.0f, 0.0f, 7.0f });
+		}
+
 		if (lookWithMouse) {
 			camera->SetLookFrame(mouse.spherical.ToMat4());
 		}
@@ -355,6 +392,9 @@ void GraphicsEnvironment::Run3D()
 		GetRenderer("light")->SetProjection(projection);
 		GetRenderer("light")->SetView(view);
 		GetRenderer("light")->RenderScene(*camera);
+		GetRenderer("circle")->SetProjection(projection);
+		GetRenderer("circle")->SetView(view);
+		GetRenderer("circle")->RenderScene(*camera);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
