@@ -367,13 +367,10 @@ void GraphicsEnvironment::Run3D()
 		intersection = ray.GetIntersectionWithPlane(plane);
 
 		if (intersection.isIntersecting) {
-			/*localLight.position.x = intersection.point.x;
-			localLight.position.z = intersection.point.z;*/
 			objectManager->GetObject("cylinder")->SetPosition({ intersection.point.x, 0.0f, intersection.point.z });
 		}
 		else {
-			//localLight.position.x = 0.0f;
-			//localLight.position.z = 0.0f;
+			objectManager->GetObject("cylinder")->SetPosition({ 10.0f, 0.0f, 7.0f });
 		}
 
 		if (lookWithMouse) {
