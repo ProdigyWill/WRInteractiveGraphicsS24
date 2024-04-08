@@ -311,9 +311,9 @@ static void SetUpPCObjectsScene(
 	pcLinesCircle->CreateIndexBuffer();
 	pcCircleBuffer->SetPrimitiveType(GL_LINES);
 	
-	Generate::GenerateXZCircle(3.0f, 60, pcCircleBuffer);
+	Generate::GenerateXZCircle(3.0f, 6, pcCircleBuffer, {1.0f, 1.0f, 0.0f});
 	std::shared_ptr<IndexBuffer> pcCircleIndexBuffer = pcLinesCircle->GetIndexBuffer();
-	Generate::LineCircleIndexes(pcCircleIndexBuffer, 6, true);
+	Generate::LineCircleIndexes(pcCircleIndexBuffer, 60, true);
 
 	pcLinesCircle->SetVertexBuffer(pcCircleBuffer);
 	pcLinesCircle->SetPosition(glm::vec3(0.0f, -2.0f, 7.0f));
@@ -327,7 +327,7 @@ static void SetUpPCObjectsScene(
 	pcLinesCylinder->CreateIndexBuffer();
 	pcCylinderBuffer->SetPrimitiveType(GL_LINES);
 
-	Generate::GenerateCylinder(2.0f, 6, 5, pcCylinderBuffer);
+	Generate::GenerateCylinder(2.0f, 6, 5, pcCylinderBuffer, {1.0f, 0.0f, 1.0f});
 	std::shared_ptr<IndexBuffer> pcCylinderIndexBuffer = pcLinesCylinder->GetIndexBuffer();
 	Generate::LineCylinderIndexes(pcCylinderIndexBuffer, 120);
 
