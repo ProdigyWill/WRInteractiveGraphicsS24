@@ -311,7 +311,8 @@ static void SetUpPCObjectsScene(
 	pcLinesCircle->CreateIndexBuffer();
 	pcCircleBuffer->SetPrimitiveType(GL_LINES);
 	
-	Generate::GenerateXZCircle(3.0f, 6, pcCircleBuffer, {1.0f, 1.0f, 0.0f});
+	Generate::GenerateXZCircle(3.0f, 6
+		, pcCircleBuffer, {1.0f, 1.0f, 0.0f});
 	std::shared_ptr<IndexBuffer> pcCircleIndexBuffer = pcLinesCircle->GetIndexBuffer();
 	Generate::LineCircleIndexes(pcCircleIndexBuffer, 60, true);
 
