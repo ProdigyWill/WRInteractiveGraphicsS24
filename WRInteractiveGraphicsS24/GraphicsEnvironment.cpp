@@ -212,8 +212,8 @@ Ray GraphicsEnvironment::GetMouseRay(const glm::mat4& projection, const glm::mat
 	Ray ray;
 
 	// Convert mouse screen coordinates to clip space
-	float rayX = (2.0f * mouse.normalizedX) - 1.0f;
-	float rayY = 1.0f - (2.0f * mouse.normalizedY);
+	float rayX = (float)(2.0f * mouse.normalizedX) - 1.0f;
+	float rayY = 1.0f - (float)(2.0f * mouse.normalizedY);
 
 	// Create ray
 	ray.Create(rayX, rayY, projection, view);
@@ -335,6 +335,8 @@ void GraphicsEnvironment::Run3D()
 	plane.SetDistanceFromOrigin(objectManager->GetObject("floor")->GetReferenceFrame()[3].y);
 	Intersection planeIntersection;
 
+	objectManager->SetBehaviorDefaults();
+
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
 		ProcessInput(window, elapsedSeconds);
@@ -398,7 +400,13 @@ void GraphicsEnvironment::Run3D()
 		self->mouse.windowHeight = height;
 		self->mouse.windowWidth = width;	
 		view = camera->LookForward();
-		objectManager->Update(elapsedSeconds);
+
+		//HighlightParams hp = { {}, &ray };
+		//objectManager->GetObject("TextureObject1")->
+		//	AddBehavior("highlight", hp);
+		//objectManager->GetObject("crate")->
+		//	AddBehavior("highlight", hp);
+		//objectManager->Update(elapsedSeconds);
 
 		objectManager->GetObject("light")->SetPosition(GetRenderer("basic")->GetScene()->GetLocalLight().position);
 		objectManager->GetObject("light")->PointAt(camera->GetPosition());

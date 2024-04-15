@@ -55,6 +55,16 @@ void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
 	this->animation = animation;
 }
 
+void GraphicsObject::SetBehaviorDefaults() {
+	for (auto& behaviorPair : behaviorMap) {
+		auto& behavior = behaviorPair.second;
+
+		if (behavior) {
+			behavior->StoreDefaults();
+		}
+	}
+}
+
 void GraphicsObject::PointAt(glm::vec3 point)
 {
 	glm::vec3 position = referenceFrame[3];
@@ -72,6 +82,11 @@ void GraphicsObject::CreateBoundingBox(float width, float height, float depth)
 	boundingBox = std::make_shared<BoundingBox>();
 	boundingBox->SetReferenceFrame(referenceFrame);
 	boundingBox->Create(width, height, depth);
+}
+
+void GraphicsObject::AddBehavior(std::string name, std::shared_ptr<IBehavior> behavior)
+{
+	behaviorMap[name] = behavior;
 }
 
 void GraphicsObject::StaticAllocateVertexBuffer()
@@ -136,5 +151,15 @@ void GraphicsObject::RotateLocalZ(float degrees)
 
 void GraphicsObject::Update(double elapsedSeconds)
 {
-	if (animation) { animation->Update(elapsedSeconds); }	
+	if (animation) {
+		animation->Update(elapsedSeconds);
+	}
+
+	for (const auto& behaviorPair : behaviorMap) {
+		const auto& behavior = behaviorPair.second;
+
+		if (behavior) {
+			behavior->Update(elapsedSeconds);
+		}
+	}
 }

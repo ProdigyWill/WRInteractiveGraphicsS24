@@ -21,6 +21,7 @@
 #include "GraphicsEnvironment.h"
 #include "Generate.h"
 #include "ObjectManager.h"
+#include "HighlightBehavior.h"
 
 struct VertexData {
 	glm::vec3 position, color;
@@ -234,7 +235,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255
 	};
 	scene = std::make_shared<Scene>();
-
+	
 	sharedTexture->SetTextureData(sizeof(textureData), textureData);
 	std::shared_ptr<GraphicsObject> texturedObject = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> buffer = Generate::CuboidNorm(10.0f, 5.0f, 5.0f);
@@ -242,6 +243,10 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	texturedObject->SetVertexBuffer(buffer);
 	texturedObject->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	texturedObject->CreateBoundingBox(10.0f, 5.0f, 5.0f);
+
+	std::shared_ptr<HighlightBehavior> highlightBehavior1 = std::make_shared<HighlightBehavior>();
+	highlightBehavior1->SetObject(texturedObject);
+	texturedObject->AddBehavior("Highlight", highlightBehavior1);
 
 	std::shared_ptr<Texture> crateTexture = std::make_shared<Texture>();
 	crateTexture->LoadTextureDataFromFile("crate.jpg");
@@ -251,6 +256,10 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	crate->SetVertexBuffer(crateBuffer);
 	crate->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));
 	crate->CreateBoundingBox(5.0f, 5.0f, 5.0f);
+
+	std::shared_ptr<HighlightBehavior> highlightBehavior2 = std::make_shared<HighlightBehavior>();
+	highlightBehavior2->SetObject(crate);
+	crate->AddBehavior("Highlight", highlightBehavior2);
 
 	std::shared_ptr<Texture> floorTexture = std::make_shared<Texture>();
 	floorTexture->LoadTextureDataFromFile("floor.jpg");
@@ -311,8 +320,7 @@ static void SetUpPCObjectsScene(
 	pcLinesCircle->CreateIndexBuffer();
 	pcCircleBuffer->SetPrimitiveType(GL_LINES);
 	
-	Generate::GenerateXZCircle(3.0f, 6
-		, pcCircleBuffer, {1.0f, 1.0f, 0.0f});
+	Generate::GenerateXZCircle(3.0f, 6, pcCircleBuffer, {1.0f, 1.0f, 0.0f});
 	std::shared_ptr<IndexBuffer> pcCircleIndexBuffer = pcLinesCircle->GetIndexBuffer();
 	Generate::LineCircleIndexes(pcCircleIndexBuffer, 60, true);
 

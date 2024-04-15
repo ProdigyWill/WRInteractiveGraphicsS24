@@ -1,5 +1,8 @@
 #pragma once
 #include <glm/gtc/matrix_transform.hpp>
+#include "Ray.h"
+
+class IBehavior;
 
 struct SphericalCoordinate {
     float phi = 0.0f, theta = 0.0f, rho = 1.0f;
@@ -45,4 +48,10 @@ struct Light {
     glm::vec3 color;
     float intensity;
     float attenuationCoef;
+};
+
+struct IParams {};
+
+struct HighlightParams : IParams {
+    Ray* ray;
 };

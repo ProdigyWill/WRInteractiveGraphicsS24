@@ -12,3 +12,14 @@ void ObjectManager::Update(double elapsedSeconds)
 	}
 }
 
+void ObjectManager::SetBehaviorDefaults() {
+    for (const auto& objectPair : objectsMap) {
+        auto& graphicsObject = objectPair.second;
+
+        if (graphicsObject) {
+            graphicsObject->SetBehaviorDefaults();
+        }
+    }
+}
+
+

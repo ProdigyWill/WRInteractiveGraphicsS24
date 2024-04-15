@@ -22,6 +22,7 @@ protected:
 	std::shared_ptr<IAnimation> animation = nullptr;
 	Material material;
 	std::shared_ptr<BoundingBox> boundingBox = nullptr;
+	std::unordered_map<std::string, std::shared_ptr<IBehavior>> behaviorMap;
 
 public:
 	GraphicsObject();
@@ -39,8 +40,10 @@ public:
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer);
 	void SetReferenceFrame(glm::mat4 referenceFrame);
 	void SetAnimation(std::shared_ptr<IAnimation> animation);
+	void SetBehaviorDefaults();
 	void PointAt(glm::vec3 point);
 	void CreateBoundingBox(float width, float height, float depth);
+	void AddBehavior(std::string name, std::shared_ptr<IBehavior> behavior);
 	inline const std::shared_ptr<VertexBuffer>& GetVertexBuffer() const {
 		return buffer;
 	}
