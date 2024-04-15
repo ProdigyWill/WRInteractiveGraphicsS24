@@ -236,6 +236,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	};
 	scene = std::make_shared<Scene>();
 	
+	//Textured Cube
 	sharedTexture->SetTextureData(sizeof(textureData), textureData);
 	std::shared_ptr<GraphicsObject> texturedObject = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> buffer = Generate::CuboidNorm(10.0f, 5.0f, 5.0f);
@@ -246,8 +247,9 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 
 	std::shared_ptr<HighlightBehavior> highlightBehavior1 = std::make_shared<HighlightBehavior>();
 	highlightBehavior1->SetObject(texturedObject);
-	texturedObject->AddBehavior("Highlight", highlightBehavior1);
+	texturedObject->AddBehavior("highlight", highlightBehavior1);
 
+	//Textured Crate
 	std::shared_ptr<Texture> crateTexture = std::make_shared<Texture>();
 	crateTexture->LoadTextureDataFromFile("crate.jpg");
 	std::shared_ptr<GraphicsObject> crate = std::make_shared<GraphicsObject>();
@@ -259,7 +261,21 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 
 	std::shared_ptr<HighlightBehavior> highlightBehavior2 = std::make_shared<HighlightBehavior>();
 	highlightBehavior2->SetObject(crate);
-	crate->AddBehavior("Highlight", highlightBehavior2);
+	crate->AddBehavior("highlight", highlightBehavior2);
+
+	//Apple 
+	std::shared_ptr<Texture> appleTexture = std::make_shared<Texture>();
+	appleTexture->LoadTextureDataFromFile("apple.jpg");
+	std::shared_ptr<GraphicsObject> apple = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> appleBuffer = Generate::CuboidNorm(5.0f, 5.0f, 5.0f);
+	appleBuffer->SetTexture(appleTexture);
+	apple->SetVertexBuffer(appleBuffer);
+	apple->SetPosition(glm::vec3(22.5f, 0.0f, 22.5f));
+	apple->CreateBoundingBox(5.0f, 5.0f, 5.0f);
+
+	std::shared_ptr<HighlightBehavior> highlightBehavior3 = std::make_shared<HighlightBehavior>();
+	highlightBehavior3->SetObject(apple);
+	apple->AddBehavior("highlight", highlightBehavior3);
 
 	std::shared_ptr<Texture> floorTexture = std::make_shared<Texture>();
 	floorTexture->LoadTextureDataFromFile("floor.jpg");
@@ -271,10 +287,12 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 
 	scene->AddObject(texturedObject);
 	scene->AddObject(crate);
+	scene->AddObject(apple);
 	scene->AddObject(floor);
 
 	objectManager->SetObject("TextureObject1", texturedObject);
 	objectManager->SetObject("crate", crate);
+	objectManager->SetObject("apple", apple);
 	objectManager->SetObject("floor", floor);
 }
 

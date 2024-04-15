@@ -34,6 +34,7 @@ public:
 	bool IsIntersectingWithRay(const Ray& ray) const;
 	const glm::mat4 GetReferenceFrame() const;
 	glm::mat4& GetLocalReferenceFrame() { return referenceFrame; }
+	std::shared_ptr<IAnimation> GetAnimation() { return animation; }
 	Material& GetMaterial() { return material; }
 	void CreateVertexBuffer(unsigned int numberOfElementsPerVertex);
 	void CreateIndexBuffer();
@@ -41,6 +42,7 @@ public:
 	void SetReferenceFrame(glm::mat4 referenceFrame);
 	void SetAnimation(std::shared_ptr<IAnimation> animation);
 	void SetBehaviorDefaults();
+	void SetBehaviorParameters(std::string name, IParams& params);
 	void PointAt(glm::vec3 point);
 	void CreateBoundingBox(float width, float height, float depth);
 	void AddBehavior(std::string name, std::shared_ptr<IBehavior> behavior);

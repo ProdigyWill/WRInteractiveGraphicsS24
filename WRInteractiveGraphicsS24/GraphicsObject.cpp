@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "BoundingBox.h"
 #include "Ray.h"
+#include <iostream>
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {
@@ -62,6 +63,20 @@ void GraphicsObject::SetBehaviorDefaults() {
 		if (behavior) {
 			behavior->StoreDefaults();
 		}
+	}
+}
+
+void GraphicsObject::SetBehaviorParameters(std::string name, IParams& params)
+{
+	auto behaviorIter = behaviorMap.find(name);
+	if (behaviorIter != behaviorMap.end())
+	{
+		std::shared_ptr<IBehavior> behavior = behaviorIter->second;
+		behavior->SetParameter(params);
+	}
+	else
+	{
+		std::cerr << "Warning: Behavior with name '" << name << "' not found in behavior map." << std::endl;
 	}
 }
 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Timer.h"
 #include "RotateAnimation.h"
+#include "MoveAnimation.h"
 GraphicsEnvironment* GraphicsEnvironment::self;
 
 GraphicsEnvironment::GraphicsEnvironment()
@@ -72,6 +73,7 @@ void GraphicsEnvironment::SetupGraphics()
 
 	//Mouse
 	glfwSetCursorPosCallback(window, OnMouseMove);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 
 	//IMGUI
 	IMGUI_CHECKVERSION();
@@ -173,6 +175,13 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 		camera->SetPosition({ -30, 5, 0 });
 		camera->SetLookFrame(glm::rotate(glm::mat4(1.0f), glm::radians(270.0f), glm::vec3(0, 1, 0)));
 		return;
+	}
+}
+
+void GraphicsEnvironment::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("apple")->GetAnimation())->ChangeState();
 	}
 }
 
@@ -320,10 +329,17 @@ void GraphicsEnvironment::Run3D()
 	Light& localLight = GetRenderer("basic")->GetScene()->GetLocalLight();
 	Light& globalLight = GetRenderer("basic")->GetScene()->GetGlobalLight();
 
+	//Rotation
 	std::shared_ptr<RotateAnimation> rotateAnimation =
 		std::make_shared<RotateAnimation>();
 	rotateAnimation->SetObject(objectManager->GetObject("crate"));
 	objectManager->GetObject("crate")->SetAnimation(rotateAnimation);
+
+	//Movement
+	std::shared_ptr<MoveAnimation> moveAnimation =
+		std::make_shared<MoveAnimation>();
+	moveAnimation->SetObject(objectManager->GetObject("apple"));
+	objectManager->GetObject("apple")->SetAnimation(moveAnimation);
 
 	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
 	camera->SetLookFrame(glm::mat4(1.0f));
@@ -376,23 +392,6 @@ void GraphicsEnvironment::Run3D()
 			objectManager->GetObject("cylinder")->SetPosition({ 10.0f, 0.0f, 7.0f });
 		}
 
-		bool isIntersectingWithTexturedCube = objectManager->GetObject("TextureObject1")->IsIntersectingWithRay(ray);
-
-		if (isIntersectingWithTexturedCube) {
-			objectManager->GetObject("TextureObject1")->GetMaterial().ambientIntensity = 1.0f;
-		}
-		else {
-			objectManager->GetObject("TextureObject1")->GetMaterial().ambientIntensity = 0.0f;
-		}
-
-		bool isIntersectingWithCrate = objectManager->GetObject("crate")->IsIntersectingWithRay(ray);
-		if (isIntersectingWithCrate) {
-			objectManager->GetObject("crate")->GetMaterial().ambientIntensity = 1.0f;
-		}
-		else {
-			objectManager->GetObject("crate")->GetMaterial().ambientIntensity = 0.0f;
-		}
-
 		if (lookWithMouse) {
 			camera->SetLookFrame(mouse.spherical.ToMat4());
 		}
@@ -401,12 +400,15 @@ void GraphicsEnvironment::Run3D()
 		self->mouse.windowWidth = width;	
 		view = camera->LookForward();
 
-		//HighlightParams hp = { {}, &ray };
-		//objectManager->GetObject("TextureObject1")->
-		//	AddBehavior("highlight", hp);
-		//objectManager->GetObject("crate")->
-		//	AddBehavior("highlight", hp);
-		//objectManager->Update(elapsedSeconds);
+		HighlightParams hp = { {}, &ray };
+		objectManager->GetObject("TextureObject1")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("crate")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("apple")->
+			SetBehaviorParameters("highlight", hp);
+
+		objectManager->Update(elapsedSeconds);
 
 		objectManager->GetObject("light")->SetPosition(GetRenderer("basic")->GetScene()->GetLocalLight().position);
 		objectManager->GetObject("light")->PointAt(camera->GetPosition());
