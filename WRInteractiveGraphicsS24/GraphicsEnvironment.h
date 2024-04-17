@@ -39,6 +39,7 @@ public:
 	void StaticAllocate();
 	void Render();
 	void ProcessInput(GLFWwindow* window, double elapsedSeconds);
+	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	static void OnMouseMove(GLFWwindow* window, double mouseX, double mouseY);
 	static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
 	Ray GetMouseRay(const glm::mat4& projection, const glm::mat4& view);

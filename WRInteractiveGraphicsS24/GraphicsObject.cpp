@@ -1,16 +1,26 @@
 #include "GraphicsObject.h"
 #include "IAnimation.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "BoundingBox.h"
+#include "Ray.h"
+#include <iostream>
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {
 	material.ambientIntensity = 0.2f;
 	material.specularIntensity = 0.5f;
 	material.shininess = 32.0f;
+	CreateBoundingBox(1.0f, 1.0f, 1.0f);
 }
 
 GraphicsObject::~GraphicsObject()
 {
+}
+
+bool GraphicsObject::IsIntersectingWithRay(const Ray& ray) const 
+{
+	boundingBox->SetReferenceFrame(referenceFrame);
+	return boundingBox->IsIntersectingWithRay(ray);
 }
 
 const glm::mat4 GraphicsObject::GetReferenceFrame() const
@@ -46,6 +56,30 @@ void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
 	this->animation = animation;
 }
 
+void GraphicsObject::SetBehaviorDefaults() {
+	for (auto& behaviorPair : behaviorMap) {
+		auto& behavior = behaviorPair.second;
+
+		if (behavior) {
+			behavior->StoreDefaults();
+		}
+	}
+}
+
+void GraphicsObject::SetBehaviorParameters(std::string name, IParams& params)
+{
+	auto behaviorIter = behaviorMap.find(name);
+	if (behaviorIter != behaviorMap.end())
+	{
+		std::shared_ptr<IBehavior> behavior = behaviorIter->second;
+		behavior->SetParameter(params);
+	}
+	else
+	{
+		std::cerr << "Warning: Behavior with name '" << name << "' not found in behavior map." << std::endl;
+	}
+}
+
 void GraphicsObject::PointAt(glm::vec3 point)
 {
 	glm::vec3 position = referenceFrame[3];
@@ -56,6 +90,18 @@ void GraphicsObject::PointAt(glm::vec3 point)
 	referenceFrame[0] = glm::vec4(xAxis, 0.0f);
 	referenceFrame[1] = glm::vec4(yAxis, 0.0f);
 	referenceFrame[2] = glm::vec4(zAxis, 0.0f);
+}
+
+void GraphicsObject::CreateBoundingBox(float width, float height, float depth) 
+{
+	boundingBox = std::make_shared<BoundingBox>();
+	boundingBox->SetReferenceFrame(referenceFrame);
+	boundingBox->Create(width, height, depth);
+}
+
+void GraphicsObject::AddBehavior(std::string name, std::shared_ptr<IBehavior> behavior)
+{
+	behaviorMap[name] = behavior;
 }
 
 void GraphicsObject::StaticAllocateVertexBuffer()
@@ -120,5 +166,15 @@ void GraphicsObject::RotateLocalZ(float degrees)
 
 void GraphicsObject::Update(double elapsedSeconds)
 {
-	if (animation) { animation->Update(elapsedSeconds); }	
+	if (animation) {
+		animation->Update(elapsedSeconds);
+	}
+
+	for (const auto& behaviorPair : behaviorMap) {
+		const auto& behavior = behaviorPair.second;
+
+		if (behavior) {
+			behavior->Update(elapsedSeconds);
+		}
+	}
 }

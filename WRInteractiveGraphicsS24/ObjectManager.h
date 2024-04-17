@@ -11,5 +11,6 @@ public:
     void SetObject(const std::string& name, std::shared_ptr<GraphicsObject> object);
     inline std::shared_ptr<GraphicsObject> GetObject(std::string name) { return objectsMap[name]; };
     void Update(double elapsedSeconds);
+    void SetBehaviorDefaults();
 };
 

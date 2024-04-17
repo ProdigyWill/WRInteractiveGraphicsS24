@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Timer.h"
 #include "RotateAnimation.h"
+#include "MoveAnimation.h"
 GraphicsEnvironment* GraphicsEnvironment::self;
 
 GraphicsEnvironment::GraphicsEnvironment()
@@ -72,6 +73,7 @@ void GraphicsEnvironment::SetupGraphics()
 
 	//Mouse
 	glfwSetCursorPosCallback(window, OnMouseMove);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 
 	//IMGUI
 	IMGUI_CHECKVERSION();
@@ -176,6 +178,13 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 	}
 }
 
+void GraphicsEnvironment::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("apple")->GetAnimation())->ChangeState();
+	}
+}
+
 void GraphicsEnvironment::OnMouseMove(GLFWwindow* window, double mouseX, double mouseY)
 {
 	self->mouse.x = mouseX;
@@ -212,8 +221,8 @@ Ray GraphicsEnvironment::GetMouseRay(const glm::mat4& projection, const glm::mat
 	Ray ray;
 
 	// Convert mouse screen coordinates to clip space
-	float rayX = (2.0f * mouse.normalizedX) - 1.0f;
-	float rayY = 1.0f - (2.0f * mouse.normalizedY);
+	float rayX = (float)(2.0f * mouse.normalizedX) - 1.0f;
+	float rayY = 1.0f - (float)(2.0f * mouse.normalizedY);
 
 	// Create ray
 	ray.Create(rayX, rayY, projection, view);
@@ -320,10 +329,17 @@ void GraphicsEnvironment::Run3D()
 	Light& localLight = GetRenderer("basic")->GetScene()->GetLocalLight();
 	Light& globalLight = GetRenderer("basic")->GetScene()->GetGlobalLight();
 
+	//Rotation
 	std::shared_ptr<RotateAnimation> rotateAnimation =
 		std::make_shared<RotateAnimation>();
 	rotateAnimation->SetObject(objectManager->GetObject("crate"));
 	objectManager->GetObject("crate")->SetAnimation(rotateAnimation);
+
+	//Movement
+	std::shared_ptr<MoveAnimation> moveAnimation =
+		std::make_shared<MoveAnimation>();
+	moveAnimation->SetObject(objectManager->GetObject("apple"));
+	objectManager->GetObject("apple")->SetAnimation(moveAnimation);
 
 	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
 	camera->SetLookFrame(glm::mat4(1.0f));
@@ -333,7 +349,9 @@ void GraphicsEnvironment::Run3D()
 	glm::vec3 rayDir{};
 	GeometricPlane plane;
 	plane.SetDistanceFromOrigin(objectManager->GetObject("floor")->GetReferenceFrame()[3].y);
-	Intersection intersection;
+	Intersection planeIntersection;
+
+	objectManager->SetBehaviorDefaults();
 
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
@@ -364,10 +382,11 @@ void GraphicsEnvironment::Run3D()
 		ray.Create((float)mouse.normalizedX, (float)mouse.normalizedY, projection, view);
 		rayStart = ray.GetStart();
 		rayDir = ray.GetDirection();
-		intersection = ray.GetIntersectionWithPlane(plane);
+		planeIntersection = ray.GetIntersectionWithPlane(plane);
 
-		if (intersection.isIntersecting) {
-			objectManager->GetObject("cylinder")->SetPosition({ intersection.point.x, 0.0f, intersection.point.z });
+		if (planeIntersection.isIntersecting) {
+			objectManager->GetObject("cylinder")->SetPosition({ planeIntersection.point.x, 0.0f, planeIntersection.point.z });
+
 		}
 		else {
 			objectManager->GetObject("cylinder")->SetPosition({ 10.0f, 0.0f, 7.0f });
@@ -380,6 +399,15 @@ void GraphicsEnvironment::Run3D()
 		self->mouse.windowHeight = height;
 		self->mouse.windowWidth = width;	
 		view = camera->LookForward();
+
+		HighlightParams hp = { {}, &ray };
+		objectManager->GetObject("TextureObject1")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("crate")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("apple")->
+			SetBehaviorParameters("highlight", hp);
+
 		objectManager->Update(elapsedSeconds);
 
 		objectManager->GetObject("light")->SetPosition(GetRenderer("basic")->GetScene()->GetLocalLight().position);

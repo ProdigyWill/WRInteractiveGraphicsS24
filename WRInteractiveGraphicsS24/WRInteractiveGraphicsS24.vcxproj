@@ -142,15 +142,19 @@
     <ClCompile Include="..\3rdparty\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdparty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="BaseObject.cpp" />
+    <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Generate.cpp" />
     <ClCompile Include="GeometricLine.cpp" />
     <ClCompile Include="GeometricPlane.cpp" />
     <ClCompile Include="GraphicsEnvironment.cpp" />
     <ClCompile Include="GraphicsObject.cpp" />
+    <ClCompile Include="HighlightBehavior.cpp" />
     <ClCompile Include="IAnimation.cpp" />
+    <ClCompile Include="IBehavior.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MoveAnimation.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -164,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseObject.h" />
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Generate.h" />
     <ClInclude Include="GeometricLine.h" />
@@ -171,8 +176,11 @@
     <ClInclude Include="GraphicsEnvironment.h" />
     <ClInclude Include="GraphicsObject.h" />
     <ClInclude Include="GraphicsStructures.h" />
+    <ClInclude Include="HighlightBehavior.h" />
     <ClInclude Include="IAnimation.h" />
+    <ClInclude Include="IBehavior.h" />
     <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="MoveAnimation.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Renderer.h" />
@@ -193,6 +201,7 @@
     <None Include="texture.vert.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="apple.jpg" />
     <Image Include="crate.jpg" />
     <Image Include="floor.jpg" />
     <Image Include="lightbulb.png" />

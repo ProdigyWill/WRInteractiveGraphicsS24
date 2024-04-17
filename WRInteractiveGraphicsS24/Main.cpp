@@ -21,6 +21,7 @@
 #include "GraphicsEnvironment.h"
 #include "Generate.h"
 #include "ObjectManager.h"
+#include "HighlightBehavior.h"
 
 struct VertexData {
 	glm::vec3 position, color;
@@ -234,14 +235,21 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255
 	};
 	scene = std::make_shared<Scene>();
-
+	
+	//Textured Cube
 	sharedTexture->SetTextureData(sizeof(textureData), textureData);
 	std::shared_ptr<GraphicsObject> texturedObject = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> buffer = Generate::CuboidNorm(10.0f, 5.0f, 5.0f);
 	buffer->SetTexture(sharedTexture);
 	texturedObject->SetVertexBuffer(buffer);
 	texturedObject->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	texturedObject->CreateBoundingBox(10.0f, 5.0f, 5.0f);
 
+	std::shared_ptr<HighlightBehavior> highlightBehavior1 = std::make_shared<HighlightBehavior>();
+	highlightBehavior1->SetObject(texturedObject);
+	texturedObject->AddBehavior("highlight", highlightBehavior1);
+
+	//Textured Crate
 	std::shared_ptr<Texture> crateTexture = std::make_shared<Texture>();
 	crateTexture->LoadTextureDataFromFile("crate.jpg");
 	std::shared_ptr<GraphicsObject> crate = std::make_shared<GraphicsObject>();
@@ -249,6 +257,25 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	crateBuffer->SetTexture(crateTexture);
 	crate->SetVertexBuffer(crateBuffer);
 	crate->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));
+	crate->CreateBoundingBox(5.0f, 5.0f, 5.0f);
+
+	std::shared_ptr<HighlightBehavior> highlightBehavior2 = std::make_shared<HighlightBehavior>();
+	highlightBehavior2->SetObject(crate);
+	crate->AddBehavior("highlight", highlightBehavior2);
+
+	//Apple 
+	std::shared_ptr<Texture> appleTexture = std::make_shared<Texture>();
+	appleTexture->LoadTextureDataFromFile("apple.jpg");
+	std::shared_ptr<GraphicsObject> apple = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> appleBuffer = Generate::CuboidNorm(5.0f, 5.0f, 5.0f);
+	appleBuffer->SetTexture(appleTexture);
+	apple->SetVertexBuffer(appleBuffer);
+	apple->SetPosition(glm::vec3(22.5f, 0.0f, 22.5f));
+	apple->CreateBoundingBox(5.0f, 5.0f, 5.0f);
+
+	std::shared_ptr<HighlightBehavior> highlightBehavior3 = std::make_shared<HighlightBehavior>();
+	highlightBehavior3->SetObject(apple);
+	apple->AddBehavior("highlight", highlightBehavior3);
 
 	std::shared_ptr<Texture> floorTexture = std::make_shared<Texture>();
 	floorTexture->LoadTextureDataFromFile("floor.jpg");
@@ -260,10 +287,12 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 
 	scene->AddObject(texturedObject);
 	scene->AddObject(crate);
+	scene->AddObject(apple);
 	scene->AddObject(floor);
 
 	objectManager->SetObject("TextureObject1", texturedObject);
 	objectManager->SetObject("crate", crate);
+	objectManager->SetObject("apple", apple);
 	objectManager->SetObject("floor", floor);
 }
 
@@ -309,9 +338,9 @@ static void SetUpPCObjectsScene(
 	pcLinesCircle->CreateIndexBuffer();
 	pcCircleBuffer->SetPrimitiveType(GL_LINES);
 	
-	Generate::GenerateXZCircle(3.0f, 60, pcCircleBuffer);
+	Generate::GenerateXZCircle(3.0f, 6, pcCircleBuffer, {1.0f, 1.0f, 0.0f});
 	std::shared_ptr<IndexBuffer> pcCircleIndexBuffer = pcLinesCircle->GetIndexBuffer();
-	Generate::LineCircleIndexes(pcCircleIndexBuffer, 6, true);
+	Generate::LineCircleIndexes(pcCircleIndexBuffer, 60, true);
 
 	pcLinesCircle->SetVertexBuffer(pcCircleBuffer);
 	pcLinesCircle->SetPosition(glm::vec3(0.0f, -2.0f, 7.0f));
@@ -325,7 +354,7 @@ static void SetUpPCObjectsScene(
 	pcLinesCylinder->CreateIndexBuffer();
 	pcCylinderBuffer->SetPrimitiveType(GL_LINES);
 
-	Generate::GenerateCylinder(2.0f, 6, 5, pcCylinderBuffer);
+	Generate::GenerateCylinder(2.0f, 6, 5, pcCylinderBuffer, {1.0f, 0.0f, 1.0f});
 	std::shared_ptr<IndexBuffer> pcCylinderIndexBuffer = pcLinesCylinder->GetIndexBuffer();
 	Generate::LineCylinderIndexes(pcCylinderIndexBuffer, 120);
 
