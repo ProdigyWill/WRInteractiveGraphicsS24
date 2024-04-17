@@ -206,6 +206,7 @@
     <Image Include="floor.jpg" />
     <Image Include="lightbulb.png" />
     <Image Include="planet05.png" />
+    <Image Include="wood.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WRInteractiveGraphicsS24.rc" />

@@ -217,6 +217,9 @@
     <Image Include="apple.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="wood.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WRInteractiveGraphicsS24.rc">

@@ -223,45 +223,58 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	shader->AddUniform("localLightIntensity");
 	shader->AddUniform("localLightAttenuationCoef");
 	shader->AddUniform("viewPosition");
-	std::shared_ptr<Texture> sharedTexture = std::make_shared<Texture>();
-	sharedTexture->SetWidth(4);
-	sharedTexture->SetHeight(4);
 
-	// Create the texture data
-	unsigned char textureData[] = {
-		255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255,
-		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
-		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
-		255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255
-	};
 	scene = std::make_shared<Scene>();
-	
-	//Textured Cube
-	sharedTexture->SetTextureData(sizeof(textureData), textureData);
-	std::shared_ptr<GraphicsObject> texturedObject = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> buffer = Generate::CuboidNorm(10.0f, 5.0f, 5.0f);
-	buffer->SetTexture(sharedTexture);
-	texturedObject->SetVertexBuffer(buffer);
-	texturedObject->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	texturedObject->CreateBoundingBox(10.0f, 5.0f, 5.0f);
 
-	std::shared_ptr<HighlightBehavior> highlightBehavior1 = std::make_shared<HighlightBehavior>();
-	highlightBehavior1->SetObject(texturedObject);
-	texturedObject->AddBehavior("highlight", highlightBehavior1);
+	//Board
+	std::shared_ptr<Texture> boardTexture = std::make_shared<Texture>();
+	boardTexture->LoadTextureDataFromFile("wood.jpg");
+	std::shared_ptr<GraphicsObject> board = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> boardBuffer = Generate::CuboidNorm(15.0f, 15.0f, 0.2f);
+	boardBuffer->SetTexture(boardTexture);
+	board->SetVertexBuffer(boardBuffer);
+	board->SetPosition(glm::vec3(0.0f, 10.0f, 0.0f));
+	board->CreateBoundingBox(15.0f, 15.0f, 0.2f);
 
-	//Textured Crate
-	std::shared_ptr<Texture> crateTexture = std::make_shared<Texture>();
-	crateTexture->LoadTextureDataFromFile("crate.jpg");
-	std::shared_ptr<GraphicsObject> crate = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> crateBuffer = Generate::CuboidNorm(5.0f, 5.0f, 5.0f);
-	crateBuffer->SetTexture(crateTexture);
-	crate->SetVertexBuffer(crateBuffer);
-	crate->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));
-	crate->CreateBoundingBox(5.0f, 5.0f, 5.0f);
+	//Left wall
+	std::shared_ptr<Texture> lWallTexture = std::make_shared<Texture>();
+	lWallTexture->LoadTextureDataFromFile("wood.jpg");
+	std::shared_ptr<GraphicsObject> lWall = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> lWallBuffer = Generate::CuboidNorm(0.1f, 15.0f, 0.2f);
+	lWallBuffer->SetTexture(lWallTexture);
+	lWall->SetVertexBuffer(lWallBuffer);
+	lWall->SetPosition(glm::vec3(-7.45f, 10.0f, 0.2f));
+	lWall->CreateBoundingBox(0.1f, 15.0f, 0.2f);
 
-	std::shared_ptr<HighlightBehavior> highlightBehavior2 = std::make_shared<HighlightBehavior>();
-	highlightBehavior2->SetObject(crate);
-	crate->AddBehavior("highlight", highlightBehavior2);
+	//Right wall
+	std::shared_ptr<Texture> rWallTexture = std::make_shared<Texture>();
+	rWallTexture->LoadTextureDataFromFile("wood.jpg");
+	std::shared_ptr<GraphicsObject> rWall = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> rWallBuffer = Generate::CuboidNorm(0.1f, 15.0f, 0.2f);
+	rWallBuffer->SetTexture(rWallTexture);
+	rWall->SetVertexBuffer(rWallBuffer);
+	rWall->SetPosition(glm::vec3(7.45f, 10.0f, 0.2f));
+	rWall->CreateBoundingBox(0.1f, 15.0f, 0.2f);
+
+	//Top wall
+	std::shared_ptr<Texture> tWallTexture = std::make_shared<Texture>();
+	tWallTexture->LoadTextureDataFromFile("wood.jpg");
+	std::shared_ptr<GraphicsObject> tWall = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> tWallBuffer = Generate::CuboidNorm(14.8f, 0.1f, 0.2f);
+	tWallBuffer->SetTexture(tWallTexture);
+	tWall->SetVertexBuffer(tWallBuffer);
+	tWall->SetPosition(glm::vec3(0.0f, 17.45f, 0.2f));
+	tWall->CreateBoundingBox(14.8f, 0.1f, 0.2f);
+
+	//Bottom wall
+	std::shared_ptr<Texture> bWallTexture = std::make_shared<Texture>();
+	bWallTexture->LoadTextureDataFromFile("wood.jpg");
+	std::shared_ptr<GraphicsObject> bWall = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bWallBuffer = Generate::CuboidNorm(14.8f, 0.1f, 0.2f);
+	bWallBuffer->SetTexture(bWallTexture);
+	bWall->SetVertexBuffer(bWallBuffer);
+	bWall->SetPosition(glm::vec3(0.0f, 2.55f, 0.2f));
+	bWall->CreateBoundingBox(14.8f, 0.1f, 0.2f);
 
 	//Apple 
 	std::shared_ptr<Texture> appleTexture = std::make_shared<Texture>();
@@ -273,10 +286,13 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	apple->SetPosition(glm::vec3(22.5f, 0.0f, 22.5f));
 	apple->CreateBoundingBox(5.0f, 5.0f, 5.0f);
 
-	std::shared_ptr<HighlightBehavior> highlightBehavior3 = std::make_shared<HighlightBehavior>();
-	highlightBehavior3->SetObject(apple);
-	apple->AddBehavior("highlight", highlightBehavior3);
+	std::shared_ptr<HighlightBehavior> highlightBehavior = std::make_shared<HighlightBehavior>();
+	highlightBehavior->SetObject(apple);
+	apple->AddBehavior("highlight", highlightBehavior);
 
+
+
+	//Floor
 	std::shared_ptr<Texture> floorTexture = std::make_shared<Texture>();
 	floorTexture->LoadTextureDataFromFile("floor.jpg");
 	std::shared_ptr<GraphicsObject> floor = std::make_shared<GraphicsObject>();
@@ -285,13 +301,19 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	floor->SetVertexBuffer(floorBuffer);
 	floor->SetPosition(glm::vec3(0.0f, -2.5f, 0.0f));
 
-	scene->AddObject(texturedObject);
-	scene->AddObject(crate);
+	scene->AddObject(board);
+	scene->AddObject(lWall);
+	scene->AddObject(rWall);
+	scene->AddObject(tWall);
+	scene->AddObject(bWall);
 	scene->AddObject(apple);
 	scene->AddObject(floor);
 
-	objectManager->SetObject("TextureObject1", texturedObject);
-	objectManager->SetObject("crate", crate);
+	objectManager->SetObject("board", board);
+	objectManager->SetObject("lWall", lWall);
+	objectManager->SetObject("rWall", lWall);
+	objectManager->SetObject("tWall", tWall);	
+	objectManager->SetObject("bWall", bWall);
 	objectManager->SetObject("apple", apple);
 	objectManager->SetObject("floor", floor);
 }
@@ -331,22 +353,6 @@ static void SetUpPCObjectsScene(
 	shader->AddUniform("world");
 	shader->AddUniform("view");
 	scene = std::make_shared<Scene>();
-
-	//Circle Object
-	std::shared_ptr<GraphicsObject> pcLinesCircle = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> pcCircleBuffer = std::make_shared<VertexBuffer>(6);
-	pcLinesCircle->CreateIndexBuffer();
-	pcCircleBuffer->SetPrimitiveType(GL_LINES);
-	
-	Generate::GenerateXZCircle(3.0f, 6, pcCircleBuffer, {1.0f, 1.0f, 0.0f});
-	std::shared_ptr<IndexBuffer> pcCircleIndexBuffer = pcLinesCircle->GetIndexBuffer();
-	Generate::LineCircleIndexes(pcCircleIndexBuffer, 60, true);
-
-	pcLinesCircle->SetVertexBuffer(pcCircleBuffer);
-	pcLinesCircle->SetPosition(glm::vec3(0.0f, -2.0f, 7.0f));
-
-	scene->AddObject(pcLinesCircle);
-	env.AddObject("circle", pcLinesCircle);
 
 	//Cyclinder Object
 	std::shared_ptr<GraphicsObject> pcLinesCylinder = std::make_shared<GraphicsObject>();

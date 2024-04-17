@@ -332,10 +332,10 @@ void GraphicsEnvironment::Run3D()
 	Light& globalLight = GetRenderer("basic")->GetScene()->GetGlobalLight();
 
 	//Rotation
-	std::shared_ptr<RotateAnimation> rotateAnimation =
-		std::make_shared<RotateAnimation>();
-	rotateAnimation->SetObject(objectManager->GetObject("crate"));
-	objectManager->GetObject("crate")->SetAnimation(rotateAnimation);
+	//std::shared_ptr<RotateAnimation> rotateAnimation =
+	//	std::make_shared<RotateAnimation>();
+	//rotateAnimation->SetObject(objectManager->GetObject("crate"));
+	//objectManager->GetObject("crate")->SetAnimation(rotateAnimation);
 
 	//Movement
 	std::shared_ptr<MoveAnimation> moveAnimation =
@@ -402,10 +402,6 @@ void GraphicsEnvironment::Run3D()
 		view = camera->LookForward();
 
 		HighlightParams hp = { {}, &mouseRay };
-		objectManager->GetObject("TextureObject1")->
-			SetBehaviorParameters("highlight", hp);
-		objectManager->GetObject("crate")->
-			SetBehaviorParameters("highlight", hp);
 		objectManager->GetObject("apple")->
 			SetBehaviorParameters("highlight", hp);
 
