@@ -24,6 +24,7 @@ private:
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 	static GraphicsEnvironment* self;
 	MouseParams mouse;
+	Ray mouseRay;
 	bool lookWithMouse = false;
 public:
 	GraphicsEnvironment();
@@ -47,5 +48,8 @@ public:
 	void Run3D();
 	void AddObject(const std::string& name, std::shared_ptr<GraphicsObject> object);
 	std::shared_ptr<Renderer> GetRenderer(const std::string& name);
+	std::shared_ptr<GraphicsObject> GetObject(const std::string& name) {
+		return objectManager->GetObject(name);
+	};
 };
 

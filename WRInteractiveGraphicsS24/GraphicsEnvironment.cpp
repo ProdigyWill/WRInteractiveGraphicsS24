@@ -181,7 +181,9 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 void GraphicsEnvironment::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("apple")->GetAnimation())->ChangeState();
+		if (self->GetObject("apple")->IsIntersectingWithRay(self->mouseRay)) {
+			std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("apple")->GetAnimation())->ChangeState();
+		}
 	}
 }
 
@@ -344,7 +346,6 @@ void GraphicsEnvironment::Run3D()
 	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
 	camera->SetLookFrame(glm::mat4(1.0f));
 
-	Ray ray;
 	glm::vec3 rayStart{};
 	glm::vec3 rayDir{};
 	GeometricPlane plane;
@@ -379,10 +380,10 @@ void GraphicsEnvironment::Run3D()
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
 		// Set up the ray
-		ray.Create((float)mouse.normalizedX, (float)mouse.normalizedY, projection, view);
-		rayStart = ray.GetStart();
-		rayDir = ray.GetDirection();
-		planeIntersection = ray.GetIntersectionWithPlane(plane);
+		mouseRay.Create((float)mouse.normalizedX, (float)mouse.normalizedY, projection, view);
+		rayStart = mouseRay.GetStart();
+		rayDir = mouseRay.GetDirection();
+		planeIntersection = mouseRay.GetIntersectionWithPlane(plane);
 
 		if (planeIntersection.isIntersecting) {
 			objectManager->GetObject("cylinder")->SetPosition({ planeIntersection.point.x, 0.0f, planeIntersection.point.z });
@@ -400,7 +401,7 @@ void GraphicsEnvironment::Run3D()
 		self->mouse.windowWidth = width;	
 		view = camera->LookForward();
 
-		HighlightParams hp = { {}, &ray };
+		HighlightParams hp = { {}, &mouseRay };
 		objectManager->GetObject("TextureObject1")->
 			SetBehaviorParameters("highlight", hp);
 		objectManager->GetObject("crate")->
