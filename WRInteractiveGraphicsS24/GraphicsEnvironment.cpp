@@ -404,6 +404,22 @@ void GraphicsEnvironment::Run3D()
 		HighlightParams hp = { {}, &mouseRay };
 		objectManager->GetObject("apple")->
 			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("tile0")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("tile1")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("tile2")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("tile3")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("tile4")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("tile5")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("tile6")->
+			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("tile7")->
+			SetBehaviorParameters("highlight", hp);
 
 		objectManager->Update(elapsedSeconds);
 

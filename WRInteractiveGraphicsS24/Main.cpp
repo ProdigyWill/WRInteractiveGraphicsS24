@@ -243,7 +243,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	std::shared_ptr<VertexBuffer> lWallBuffer = Generate::CuboidNorm(0.1f, 15.0f, 0.2f);
 	lWallBuffer->SetTexture(lWallTexture);
 	lWall->SetVertexBuffer(lWallBuffer);
-	lWall->SetPosition(glm::vec3(-7.45f, 10.0f, 0.2f));
+	lWall->SetPosition(glm::vec3(-7.55f, 10.0f, 0.2f));
 	lWall->CreateBoundingBox(0.1f, 15.0f, 0.2f);
 
 	//Right wall
@@ -253,28 +253,55 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	std::shared_ptr<VertexBuffer> rWallBuffer = Generate::CuboidNorm(0.1f, 15.0f, 0.2f);
 	rWallBuffer->SetTexture(rWallTexture);
 	rWall->SetVertexBuffer(rWallBuffer);
-	rWall->SetPosition(glm::vec3(7.45f, 10.0f, 0.2f));
+	rWall->SetPosition(glm::vec3(7.55f, 10.0f, 0.2f));
 	rWall->CreateBoundingBox(0.1f, 15.0f, 0.2f);
 
 	//Top wall
 	std::shared_ptr<Texture> tWallTexture = std::make_shared<Texture>();
 	tWallTexture->LoadTextureDataFromFile("wood.jpg");
 	std::shared_ptr<GraphicsObject> tWall = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> tWallBuffer = Generate::CuboidNorm(14.8f, 0.1f, 0.2f);
+	std::shared_ptr<VertexBuffer> tWallBuffer = Generate::CuboidNorm(15.0f, 0.1f, 0.2f);
 	tWallBuffer->SetTexture(tWallTexture);
 	tWall->SetVertexBuffer(tWallBuffer);
-	tWall->SetPosition(glm::vec3(0.0f, 17.45f, 0.2f));
-	tWall->CreateBoundingBox(14.8f, 0.1f, 0.2f);
+	tWall->SetPosition(glm::vec3(0.0f, 17.55f, 0.2f));
+	tWall->CreateBoundingBox(15.0f, 0.1f, 0.2f);
 
 	//Bottom wall
 	std::shared_ptr<Texture> bWallTexture = std::make_shared<Texture>();
 	bWallTexture->LoadTextureDataFromFile("wood.jpg");
 	std::shared_ptr<GraphicsObject> bWall = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> bWallBuffer = Generate::CuboidNorm(14.8f, 0.1f, 0.2f);
+	std::shared_ptr<VertexBuffer> bWallBuffer = Generate::CuboidNorm(15.0f, 0.1f, 0.2f);
 	bWallBuffer->SetTexture(bWallTexture);
 	bWall->SetVertexBuffer(bWallBuffer);
-	bWall->SetPosition(glm::vec3(0.0f, 2.55f, 0.2f));
-	bWall->CreateBoundingBox(14.8f, 0.1f, 0.2f);
+	bWall->SetPosition(glm::vec3(0.0f, 2.45f, 0.2f));
+	bWall->CreateBoundingBox(15.0f, 0.1f, 0.2f);
+
+	//Tiles
+	int numberOfTiles = 8;
+	std::vector<std::shared_ptr<GraphicsObject>> tilePointers(numberOfTiles);
+	GraphicsObject* tiles = new GraphicsObject[numberOfTiles];
+	std::shared_ptr<Texture> tileTexture = std::make_shared<Texture>();
+	tileTexture->LoadTextureDataFromFile("apple.jpg");
+	float xOffset = 0.0f;
+    float yOffset = 0.0f;
+	for (int i = 0; i < numberOfTiles; i++) {
+		tilePointers[i] = std::make_shared<GraphicsObject>(tiles[i]);
+		std::shared_ptr<VertexBuffer> tileBuffer = Generate::CuboidNorm(5.0f, 5.0f, 0.1f);
+		tileBuffer->SetTexture(tileTexture);
+		tilePointers[i]->SetVertexBuffer(tileBuffer);
+		tilePointers[i]->CreateBoundingBox(5.0f, 5.0f, 0.1f);
+
+		std::shared_ptr<HighlightBehavior> highlightBehavior = std::make_shared<HighlightBehavior>();
+		highlightBehavior->SetObject(tilePointers[i]);
+		tilePointers[i]->AddBehavior("highlight", highlightBehavior);
+
+		if (i % 3 == 0) { 
+			xOffset = 0.0f;
+			yOffset += 5.0f; 
+		}
+		xOffset += 5.0f;
+		tilePointers[i]->SetPosition(glm::vec3(-10.0f + xOffset, 20.0f - yOffset, 0.2f));
+	}
 
 	//Apple 
 	std::shared_ptr<Texture> appleTexture = std::make_shared<Texture>();
@@ -316,6 +343,20 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	objectManager->SetObject("bWall", bWall);
 	objectManager->SetObject("apple", apple);
 	objectManager->SetObject("floor", floor);
+
+	std::stringstream ss;
+	for (int i = 0; i < numberOfTiles; i++) {
+		// Get the name for the current tile
+		ss.str("");
+		ss << "tile" << i;
+		std::string tileName = ss.str();
+
+		// Add the tile to the scene
+		scene->AddObject(tilePointers[i]); // Assuming AddObject() takes a GraphicsObject pointer
+
+		// Add the tile to the object manager using its name
+		objectManager->SetObject(tileName, tilePointers[i]);
+	}
 }
 
 static void SetUpLightScene(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene, std::shared_ptr<ObjectManager>& objectManager) {
