@@ -181,8 +181,11 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 void GraphicsEnvironment::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		if (self->GetObject("apple")->IsIntersectingWithRay(self->mouseRay)) {
-			std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("apple")->GetAnimation())->ChangeState();
+		if (self->GetObject("tile5")->IsIntersectingWithRay(self->mouseRay)) {
+			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile5")->GetAnimation());
+			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+			animation->ChangeState();
+			return;
 		}
 	}
 }
@@ -340,8 +343,8 @@ void GraphicsEnvironment::Run3D()
 	//Movement
 	std::shared_ptr<MoveAnimation> moveAnimation =
 		std::make_shared<MoveAnimation>();
-	moveAnimation->SetObject(objectManager->GetObject("apple"));
-	objectManager->GetObject("apple")->SetAnimation(moveAnimation);
+	moveAnimation->SetObject(objectManager->GetObject("tile5"));
+	objectManager->GetObject("tile5")->SetAnimation(moveAnimation);
 
 	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
 	camera->SetLookFrame(glm::mat4(1.0f));
@@ -446,6 +449,8 @@ void GraphicsEnvironment::Run3D()
 			1000.0f / io.Framerate, io.Framerate);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
 		ImGui::Text("Mouse: (%.0f, %.0f)", mouse.x, mouse.y);
+		ImGui::Text("Empty Position: (%.0u)", objectManager->GetEmptyPosition());
+		ImGui::Text("Empty Position: (%.0u)", moveAnimation->GetEmptyPosition());
 		ImGui::SliderFloat("Global Intensity", &globalLight.intensity, 0, 1);
 		ImGui::SliderFloat("Local Intensity", &localLight.intensity, 0, 1);
 		ImGui::DragFloat3("Local Light Position", &localLight.position.x);

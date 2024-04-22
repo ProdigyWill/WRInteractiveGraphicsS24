@@ -351,8 +351,10 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		ss << "tile" << i;
 		std::string tileName = ss.str();
 
+		tilePointers[i]->SetBoardPosition(i + 1);
+
 		// Add the tile to the scene
-		scene->AddObject(tilePointers[i]); // Assuming AddObject() takes a GraphicsObject pointer
+		scene->AddObject(tilePointers[i]);
 
 		// Add the tile to the object manager using its name
 		objectManager->SetObject(tileName, tilePointers[i]);
