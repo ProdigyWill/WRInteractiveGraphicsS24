@@ -419,7 +419,7 @@ void GraphicsEnvironment::Run3D()
 	moveAnimation8->SetObject(objectManager->GetObject("tile7"));
 	objectManager->GetObject("tile7")->SetAnimation(moveAnimation8);
 
-	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
+	camera->SetPosition({ 0.0f, 10.0f, 20.0f });
 	camera->SetLookFrame(glm::mat4(1.0f));
 
 	glm::vec3 rayStart{};
