@@ -181,8 +181,50 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 void GraphicsEnvironment::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		if (self->GetObject("tile0")->IsIntersectingWithRay(self->mouseRay)) {
+			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile0")->GetAnimation());
+			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+			animation->ChangeState();
+			return;
+		}
+		if (self->GetObject("tile1")->IsIntersectingWithRay(self->mouseRay)) {
+			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile1")->GetAnimation());
+			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+			animation->ChangeState();
+			return;
+		}
+		if (self->GetObject("tile2")->IsIntersectingWithRay(self->mouseRay)) {
+			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile2")->GetAnimation());
+			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+			animation->ChangeState();
+			return;
+		}
+		if (self->GetObject("tile3")->IsIntersectingWithRay(self->mouseRay)) {
+			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile3")->GetAnimation());
+			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+			animation->ChangeState();
+			return;
+		}
+		if (self->GetObject("tile4")->IsIntersectingWithRay(self->mouseRay)) {
+			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile4")->GetAnimation());
+			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+			animation->ChangeState();
+			return;
+		}
 		if (self->GetObject("tile5")->IsIntersectingWithRay(self->mouseRay)) {
 			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile5")->GetAnimation());
+			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+			animation->ChangeState();
+			return;
+		}
+		if (self->GetObject("tile6")->IsIntersectingWithRay(self->mouseRay)) {
+			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile6")->GetAnimation());
+			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+			animation->ChangeState();
+			return;
+		}
+		if (self->GetObject("tile7")->IsIntersectingWithRay(self->mouseRay)) {
+			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile7")->GetAnimation());
 			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
 			animation->ChangeState();
 			return;
@@ -343,8 +385,43 @@ void GraphicsEnvironment::Run3D()
 	//Movement
 	std::shared_ptr<MoveAnimation> moveAnimation =
 		std::make_shared<MoveAnimation>();
-	moveAnimation->SetObject(objectManager->GetObject("tile5"));
-	objectManager->GetObject("tile5")->SetAnimation(moveAnimation);
+	moveAnimation->SetObject(objectManager->GetObject("tile0"));
+	objectManager->GetObject("tile0")->SetAnimation(moveAnimation);
+
+	std::shared_ptr<MoveAnimation> moveAnimation2 =
+		std::make_shared<MoveAnimation>();
+	moveAnimation2->SetObject(objectManager->GetObject("tile1"));
+	objectManager->GetObject("tile1")->SetAnimation(moveAnimation2);
+
+	std::shared_ptr<MoveAnimation> moveAnimation3 =
+		std::make_shared<MoveAnimation>();
+	moveAnimation3->SetObject(objectManager->GetObject("tile2"));
+	objectManager->GetObject("tile2")->SetAnimation(moveAnimation3);
+
+	std::shared_ptr<MoveAnimation> moveAnimation4 =
+		std::make_shared<MoveAnimation>();
+	moveAnimation4->SetObject(objectManager->GetObject("tile3"));
+	objectManager->GetObject("tile3")->SetAnimation(moveAnimation4);
+
+	std::shared_ptr<MoveAnimation> moveAnimation5 =
+		std::make_shared<MoveAnimation>();
+	moveAnimation5->SetObject(objectManager->GetObject("tile4"));
+	objectManager->GetObject("tile4")->SetAnimation(moveAnimation5);
+
+	std::shared_ptr<MoveAnimation> moveAnimation6 =
+		std::make_shared<MoveAnimation>();
+	moveAnimation6->SetObject(objectManager->GetObject("tile5"));
+	objectManager->GetObject("tile5")->SetAnimation(moveAnimation6);
+
+	std::shared_ptr<MoveAnimation> moveAnimation7 =
+		std::make_shared<MoveAnimation>();
+	moveAnimation7->SetObject(objectManager->GetObject("tile6"));
+	objectManager->GetObject("tile6")->SetAnimation(moveAnimation7);
+
+	std::shared_ptr<MoveAnimation> moveAnimation8 =
+		std::make_shared<MoveAnimation>();
+	moveAnimation8->SetObject(objectManager->GetObject("tile7"));
+	objectManager->GetObject("tile7")->SetAnimation(moveAnimation8);
 
 	camera->SetPosition({ 0.0f, 0.0f, 20.0f });
 	camera->SetLookFrame(glm::mat4(1.0f));
@@ -388,14 +465,6 @@ void GraphicsEnvironment::Run3D()
 		rayDir = mouseRay.GetDirection();
 		planeIntersection = mouseRay.GetIntersectionWithPlane(plane);
 
-		if (planeIntersection.isIntersecting) {
-			objectManager->GetObject("cylinder")->SetPosition({ planeIntersection.point.x, 0.0f, planeIntersection.point.z });
-
-		}
-		else {
-			objectManager->GetObject("cylinder")->SetPosition({ 10.0f, 0.0f, 7.0f });
-		}
-
 		if (lookWithMouse) {
 			camera->SetLookFrame(mouse.spherical.ToMat4());
 		}
@@ -436,9 +505,6 @@ void GraphicsEnvironment::Run3D()
 		GetRenderer("light")->SetProjection(projection);
 		GetRenderer("light")->SetView(view);
 		GetRenderer("light")->RenderScene(*camera);
-		GetRenderer("circle")->SetProjection(projection);
-		GetRenderer("circle")->SetView(view);
-		GetRenderer("circle")->RenderScene(*camera);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

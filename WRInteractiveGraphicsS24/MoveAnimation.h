@@ -1,6 +1,7 @@
 #pragma once
 #include "IAnimation.h"
 #include "GraphicsObject.h"
+#include <math.h> 
 
 class MoveAnimation : public IAnimation
 {

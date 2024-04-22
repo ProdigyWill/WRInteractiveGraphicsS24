@@ -289,7 +289,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		std::shared_ptr<VertexBuffer> tileBuffer = Generate::CuboidNorm(5.0f, 5.0f, 0.1f);
 		tileBuffer->SetTexture(tileTexture);
 		tilePointers[i]->SetVertexBuffer(tileBuffer);
-		tilePointers[i]->CreateBoundingBox(5.0f, 5.0f, 0.1f);
+		tilePointers[i]->CreateBoundingBox(4.8f, 4.8f, 0.1f);
 
 		std::shared_ptr<HighlightBehavior> highlightBehavior = std::make_shared<HighlightBehavior>();
 		highlightBehavior->SetObject(tilePointers[i]);
@@ -446,13 +446,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	glfw.CreateRenderer("light", lightShader);
 	glfw.GetRenderer("light")->SetScene(lightScene);
-
-	std::shared_ptr<Shader> circleShader;
-	std::shared_ptr<Scene> circleScene;
-	SetUpPCObjectsScene(circleShader, circleScene, glfw);
-
-	glfw.CreateRenderer("circle", circleShader);
-	glfw.GetRenderer("circle")->SetScene(circleScene);
 
 	glfw.StaticAllocate();
 

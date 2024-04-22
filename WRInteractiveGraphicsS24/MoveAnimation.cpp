@@ -51,6 +51,10 @@ void MoveAnimation::Update(double elapsedSeconds)
 {
 	if (object == nullptr) return;
 	if (distanceMoved >= distanceToMove) {
+		auto& frame = object->GetLocalReferenceFrame();
+		glm::vec3 pos = frame[3];
+		frame[3].x = round(frame[3].x);
+		frame[3].y = round(frame[3].y);
 		distanceMoved = 0;
 		isMoving = false;
 		emptyPosition -= emptyDiff;
