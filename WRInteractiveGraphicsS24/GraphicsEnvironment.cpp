@@ -376,12 +376,6 @@ void GraphicsEnvironment::Run3D()
 	Light& localLight = GetRenderer("basic")->GetScene()->GetLocalLight();
 	Light& globalLight = GetRenderer("basic")->GetScene()->GetGlobalLight();
 
-	//Rotation
-	//std::shared_ptr<RotateAnimation> rotateAnimation =
-	//	std::make_shared<RotateAnimation>();
-	//rotateAnimation->SetObject(objectManager->GetObject("crate"));
-	//objectManager->GetObject("crate")->SetAnimation(rotateAnimation);
-
 	//Movement
 	std::shared_ptr<MoveAnimation> moveAnimation =
 		std::make_shared<MoveAnimation>();
@@ -516,7 +510,6 @@ void GraphicsEnvironment::Run3D()
 		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
 		ImGui::Text("Mouse: (%.0f, %.0f)", mouse.x, mouse.y);
 		ImGui::Text("Empty Position: (%.0u)", objectManager->GetEmptyPosition());
-		ImGui::Text("Empty Position: (%.0u)", moveAnimation->GetEmptyPosition());
 		ImGui::SliderFloat("Global Intensity", &globalLight.intensity, 0, 1);
 		ImGui::SliderFloat("Local Intensity", &localLight.intensity, 0, 1);
 		ImGui::DragFloat3("Local Light Position", &localLight.position.x);
