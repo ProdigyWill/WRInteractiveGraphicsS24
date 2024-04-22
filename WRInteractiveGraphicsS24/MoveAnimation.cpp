@@ -57,12 +57,14 @@ void MoveAnimation::Update(double elapsedSeconds)
 		frame[3].y = round(frame[3].y);
 		distanceMoved = 0;
 		isMoving = false;
+		moveLock = false;
 		emptyPosition -= emptyDiff;
 		object->SetBoardPosition(object->GetBoardPosition() + emptyDiff);
 		isUpdated = true;
 		return;
 	}
 	if (isMoving && CanMove()) {
+		moveLock = true;
 		UpdateDirection();
 		float deltaSpeed = static_cast<float>(speed * elapsedSeconds);
 		auto& frame = object->GetLocalReferenceFrame();

@@ -8,6 +8,7 @@ class MoveAnimation : public IAnimation
 private:
 	bool isMoving = false;
 	bool isUpdated = false;
+	bool moveLock = false;
 	glm::vec3 direction;
 	float distanceToMove;
 	float distanceMoved = 0;
@@ -21,7 +22,9 @@ public:
 	inline void ChangeState() { isMoving = !isMoving; }
 	void UpdateDirection();
 	bool CanMove();
+	inline bool GetIsMoving() { return isMoving; }
 	inline bool GetIsUpdated() { return isUpdated; }
+	inline bool GetMoveLock() { return moveLock; }
 	void SwapIsUpdated() { isUpdated = !isUpdated; }
 	inline unsigned int GetEmptyPosition() { return emptyPosition; };
 	inline void UpdateEmptyPosition(unsigned int emptyPosition) { this->emptyPosition = emptyPosition; }

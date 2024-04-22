@@ -1,6 +1,18 @@
 #include "ObjectManager.h"
 #include "MoveAnimation.h"
 
+bool ObjectManager::CheckAnimation() {
+    for (const auto& pair : objectsMap) {
+        std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(pair.second->GetAnimation());
+        if (animation) {
+            if (animation->GetMoveLock()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void ObjectManager::SetObject(const std::string& name, std::shared_ptr<GraphicsObject> object)
 {
 	objectsMap[name] = object;

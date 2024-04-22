@@ -10,6 +10,7 @@ private:
     unsigned int emptyPosition = 9;
 
 public:
+    bool CheckAnimation();
     inline unsigned int GetEmptyPosition() { return emptyPosition; }
     void SetObject(const std::string& name, std::shared_ptr<GraphicsObject> object);
     inline std::shared_ptr<GraphicsObject> GetObject(std::string name) { return objectsMap[name]; };

@@ -181,53 +181,55 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 void GraphicsEnvironment::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		if (self->GetObject("tile0")->IsIntersectingWithRay(self->mouseRay)) {
-			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile0")->GetAnimation());
-			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
-			animation->ChangeState();
-			return;
-		}
-		if (self->GetObject("tile1")->IsIntersectingWithRay(self->mouseRay)) {
-			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile1")->GetAnimation());
-			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
-			animation->ChangeState();
-			return;
-		}
-		if (self->GetObject("tile2")->IsIntersectingWithRay(self->mouseRay)) {
-			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile2")->GetAnimation());
-			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
-			animation->ChangeState();
-			return;
-		}
-		if (self->GetObject("tile3")->IsIntersectingWithRay(self->mouseRay)) {
-			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile3")->GetAnimation());
-			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
-			animation->ChangeState();
-			return;
-		}
-		if (self->GetObject("tile4")->IsIntersectingWithRay(self->mouseRay)) {
-			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile4")->GetAnimation());
-			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
-			animation->ChangeState();
-			return;
-		}
-		if (self->GetObject("tile5")->IsIntersectingWithRay(self->mouseRay)) {
-			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile5")->GetAnimation());
-			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
-			animation->ChangeState();
-			return;
-		}
-		if (self->GetObject("tile6")->IsIntersectingWithRay(self->mouseRay)) {
-			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile6")->GetAnimation());
-			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
-			animation->ChangeState();
-			return;
-		}
-		if (self->GetObject("tile7")->IsIntersectingWithRay(self->mouseRay)) {
-			std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile7")->GetAnimation());
-			animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
-			animation->ChangeState();
-			return;
+		if (!self->objectManager->CheckAnimation()) {
+			if (self->GetObject("tile0")->IsIntersectingWithRay(self->mouseRay)) {
+				std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile0")->GetAnimation());
+				animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+				animation->ChangeState();
+				return;
+			}
+			if (self->GetObject("tile1")->IsIntersectingWithRay(self->mouseRay)) {
+				std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile1")->GetAnimation());
+				animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+				animation->ChangeState();
+				return;
+			}
+			if (self->GetObject("tile2")->IsIntersectingWithRay(self->mouseRay)) {
+				std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile2")->GetAnimation());
+				animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+				animation->ChangeState();
+				return;
+			}
+			if (self->GetObject("tile3")->IsIntersectingWithRay(self->mouseRay)) {
+				std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile3")->GetAnimation());
+				animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+				animation->ChangeState();
+				return;
+			}
+			if (self->GetObject("tile4")->IsIntersectingWithRay(self->mouseRay)) {
+				std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile4")->GetAnimation());
+				animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+				animation->ChangeState();
+				return;
+			}
+			if (self->GetObject("tile5")->IsIntersectingWithRay(self->mouseRay)) {
+				std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile5")->GetAnimation());
+				animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+				animation->ChangeState();
+				return;
+			}
+			if (self->GetObject("tile6")->IsIntersectingWithRay(self->mouseRay)) {
+				std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile6")->GetAnimation());
+				animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+				animation->ChangeState();
+				return;
+			}
+			if (self->GetObject("tile7")->IsIntersectingWithRay(self->mouseRay)) {
+				std::shared_ptr<MoveAnimation> animation = std::static_pointer_cast<MoveAnimation>(self->objectManager->GetObject("tile7")->GetAnimation());
+				animation->UpdateEmptyPosition(self->objectManager->GetEmptyPosition());
+				animation->ChangeState();
+				return;
+			}
 		}
 	}
 }
