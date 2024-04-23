@@ -13,8 +13,8 @@ private:
 	float distanceToMove;
 	float distanceMoved = 0;
 	float speed;
-	unsigned int emptyPosition;
-	int emptyDiff;
+	unsigned int emptyPosition = 0;
+	int emptyDiff = 0;
 
 public:
 	MoveAnimation(glm::vec3 direction = {0, 0, 0}, float distanceToMove = 5.0f, float speed = 10.0f)
