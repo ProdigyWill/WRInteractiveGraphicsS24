@@ -277,6 +277,16 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	bWall->CreateBoundingBox(15.0f, 0.1f, 0.2f);
 
 	//Tiles
+	std::vector<glm::vec4> texCoords = {
+	{0.3f, 1.0f, 0.0f, 0.6f},  // Tile 1
+	{0.6f, 1.0f, 0.3f, 0.6f},  // Tile 2
+	{1.0f, 1.0f, 0.6f, 0.6f},  // Tile 3
+	{0.3f, 0.6f, 0.0f, 0.3f},  // Tile 4
+	{0.6f, 0.6f, 0.3f, 0.3f},  // Tile 5
+	{1.0f, 0.6f, 0.6f, 0.3f},  // Tile 6
+	{0.3f, 0.3f, 0.0f, 0.0f},  // Tile 7
+	{0.6f, 0.3f, 0.3f, 0.0f}   // Tile 8
+	};
 	int numberOfTiles = 8;
 	std::vector<std::shared_ptr<GraphicsObject>> tilePointers(numberOfTiles);
 	GraphicsObject* tiles = new GraphicsObject[numberOfTiles];
@@ -286,7 +296,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
     float yOffset = 0.0f;
 	for (int i = 0; i < numberOfTiles; i++) {
 		tilePointers[i] = std::make_shared<GraphicsObject>(tiles[i]);
-		std::shared_ptr<VertexBuffer> tileBuffer = Generate::CuboidNorm(5.0f, 5.0f, 0.1f);
+		std::shared_ptr<VertexBuffer> tileBuffer = Generate::Tile(5.0f, 5.0f, 0.1f, { 1.0f,1.0f,1.0f,1.0f }, texCoords[i]);
 		tileBuffer->SetTexture(tileTexture);
 		tilePointers[i]->SetVertexBuffer(tileBuffer);
 		tilePointers[i]->CreateBoundingBox(4.8f, 4.8f, 0.1f);
@@ -302,6 +312,14 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		xOffset += 5.0f;
 		tilePointers[i]->SetPosition(glm::vec3(-10.0f + xOffset, 20.0f - yOffset, 0.2f));
 	}
+
+	//Hidden tile
+	std::shared_ptr<GraphicsObject> tile8 = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> tile8Buffer = Generate::Tile(5.0f, 5.0f, 0.1f, { 1.0f,1.0f,1.0f,1.0f }, {1.0f, 0.3, 0.6f, 0.0f});
+	tile8Buffer->SetTexture(tileTexture);
+	tile8->SetVertexBuffer(tile8Buffer);
+	tile8->SetPosition(glm::vec3(0.0f, -10.0f, 0.0f));
+	tile8->CreateBoundingBox(4.8f, 4.8f, 0.1f);
 
 	//Apple 
 	std::shared_ptr<Texture> appleTexture = std::make_shared<Texture>();
@@ -359,6 +377,9 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		// Add the tile to the object manager using its name
 		objectManager->SetObject(tileName, tilePointers[i]);
 	}
+
+	scene->AddObject(tile8);
+	objectManager->SetObject("tile8", tile8);
 }
 
 static void SetUpLightScene(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene, std::shared_ptr<ObjectManager>& objectManager) {

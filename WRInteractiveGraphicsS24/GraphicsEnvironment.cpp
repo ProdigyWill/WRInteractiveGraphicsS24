@@ -488,6 +488,8 @@ void GraphicsEnvironment::Run3D()
 			SetBehaviorParameters("highlight", hp);
 		objectManager->GetObject("tile7")->
 			SetBehaviorParameters("highlight", hp);
+		objectManager->GetObject("tile8")->
+			SetBehaviorParameters("highlight", hp);
 
 		objectManager->Update(elapsedSeconds);
 
