@@ -24,6 +24,7 @@ protected:
 	std::shared_ptr<BoundingBox> boundingBox = nullptr;
 	std::unordered_map<std::string, std::shared_ptr<IBehavior>> behaviorMap;
 	unsigned int boardPosition;
+	unsigned int correctPosition;
 
 public:
 	GraphicsObject();

@@ -182,40 +182,40 @@ std::shared_ptr<VertexBuffer> Generate::Tile(float width, float height, float de
 	buffer->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, 1.0f, tex.x, tex.w);
 	buffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, 1.0f, tex.x, tex.y);
 	// Right face		  
-	buffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, tex.s, tex.t);
+	buffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, tex.z, tex.w);
+	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, tex.x, tex.y);
 	// Back face  		 
-	buffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	buffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, tex.s, tex.t);
+	buffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, tex.z, tex.w);
+	buffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 0.0f, -1.0f, tex.x, tex.y);
 	// Left face 		  
-	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	buffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, tex.s, tex.t);
+	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, tex.z, tex.w);
+	buffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, -1.0f, 0.0f, 0.0f, tex.x, tex.y);
 	// Top face			  
-	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
-	buffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, tex.s, tex.t);
+	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, tex.z, tex.w);
+	buffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, tex.x, tex.y);
 	// Bottom face 		  
-	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f);
-	buffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, 0.0f, tex.t);
-	buffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, tex.s, 0.0f);
-	buffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, tex.s, tex.t);
+	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, tex.z, tex.w);
+	buffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, tex.z, tex.y);
+	buffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, tex.x, tex.w);
+	buffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, 0.0f, -1.0f, 0.0f, tex.x, tex.y);
 
 	buffer->AddVertexAttribute("position", 0, 3, 0);
 	buffer->AddVertexAttribute("vertexColor", 1, 4, 3);

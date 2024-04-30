@@ -46,6 +46,11 @@ void GraphicsObject::SetBoardPosition(unsigned int boardPosition)
 	this->boardPosition = boardPosition;
 }
 
+void GraphicsObject::SetCorrectPosition(unsigned int correctPosition)
+{
+	this->correctPosition = correctPosition;
+}
+
 void GraphicsObject::SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer)
 {
 	this->buffer = buffer;

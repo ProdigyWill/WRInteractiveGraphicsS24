@@ -17,7 +17,7 @@ private:
 	int emptyDiff = 0;
 
 public:
-	MoveAnimation(glm::vec3 direction = {0, 0, 0}, float distanceToMove = 5.0f, float speed = 10.0f)
+	MoveAnimation(glm::vec3 direction = {0, 0, 0}, float distanceToMove = 5.0f, float speed = 20.0f)
 		: IAnimation(), direction(direction), distanceToMove(distanceToMove), speed(speed) {}
 	inline void ChangeState() { isMoving = !isMoving; }
 	void UpdateDirection();
