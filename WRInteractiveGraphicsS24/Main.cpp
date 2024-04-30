@@ -23,11 +23,59 @@
 #include "ObjectManager.h"
 #include "HighlightBehavior.h"
 #include <random>
+#include <filesystem>
 
 struct VertexData {
 	glm::vec3 position, color;
 	glm::vec2 tex;
 };
+
+std::string GetRandomImageFromFolder(const std::string& folderPath) {
+	// Create a vector to store image paths
+	std::vector<std::string> imagePaths;
+
+	// Iterate over files in the folder and store image paths
+	for (const auto& entry : std::filesystem::directory_iterator(folderPath)) {
+		if (entry.is_regular_file()) {
+			// Check if the file is an image
+			std::string extension = entry.path().extension().string();
+			if (extension == ".jpg" || extension == ".png" || extension == ".bmp") {
+				imagePaths.push_back(entry.path().string());
+			}
+		}
+	}
+
+	// Choose a random image path
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(0, static_cast<int>(imagePaths.size() - 1));
+	int randomIndex = dis(gen);
+	return imagePaths[randomIndex];
+}
+
+// Function to load a random image
+void LoadRandomImage(std::shared_ptr<Texture>& texture, const std::string& folderPath) {
+	std::string randomImagePath = GetRandomImageFromFolder(folderPath);
+	texture->LoadTextureDataFromFile(randomImagePath);
+}
+
+//https://www.geeksforgeeks.org/check-instance-15-puzzle-solvable/
+bool IsPuzzleSolvable(const std::vector<glm::vec3>& tilePositions) {
+	int inversions = 0;
+
+	for (int i = 0; i < tilePositions.size(); ++i) {
+		for (int j = i + 1; j < tilePositions.size(); ++j) {
+			// Count inversions, ignoring the blank tile
+			if (tilePositions[i].x != 9 && tilePositions[j].x != 9 &&
+				tilePositions[i].x > tilePositions[j].x) {
+				inversions++;
+			}
+		}
+	}
+
+	// If the number of inversions is even, the puzzle is solvable
+	return inversions % 2 == 0;
+}
 
 static void SetUpScene(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene) {
 	const std::string vertexFilePath = "basic.vert.glsl";
@@ -204,23 +252,6 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	objectManager->SetObject("floor", floor);
 }
 
-bool IsPuzzleSolvable(const std::vector<glm::vec3>& tilePositions) {
-	int inversions = 0;
-
-	for (int i = 0; i < tilePositions.size(); ++i) {
-		for (int j = i + 1; j < tilePositions.size(); ++j) {
-			// Count inversions, ignoring the blank tile
-			if (tilePositions[i].x != 9 && tilePositions[j].x != 9 &&
-				tilePositions[i].x > tilePositions[j].x) {
-				inversions++;
-			}
-		}
-	}
-
-	// If the number of inversions is even, the puzzle is solvable
-	return inversions % 2 == 0;
-}
-
 static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene, std::shared_ptr<ObjectManager>& objectManager) {
 	TextFile textureVertexFile("lighting.vert.glsl");
 	TextFile textureFragmentFile("lighting.frag.glsl");
@@ -296,21 +327,24 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 
 	//Tiles
 	std::vector<glm::vec4> texCoords = {
-	{0.333333f, 1.0f, 0.0f, 0.666666f},  // Tile 1
-	{0.666666f, 1.0f, 0.333333f, 0.666666f},  // Tile 2
-	{1.0f, 1.0f, 0.666666f, 0.666666f},  // Tile 3
-	{0.333333f, 0.666666f, 0.0f, 0.333333f},  // Tile 4
-	{0.666666f, 0.666666f, 0.333333f, 0.333333f},  // Tile 5
-	{1.0f, 0.666666f, 0.666666f, 0.333333f},  // Tile 6
-	{0.333333f, 0.333333f, 0.0f, 0.0f},  // Tile 7
-	{0.666666f, 0.333333f, 0.333333f, 0.0f}   // Tile 8
+	{0.333333f, 1.0f, 0.0f, 0.666666f},  // Tile 0
+	{0.666666f, 1.0f, 0.333333f, 0.666666f},  // Tile 1
+	{1.0f, 1.0f, 0.666666f, 0.666666f},  // Tile 2
+	{0.333333f, 0.666666f, 0.0f, 0.333333f},  // Tile 3
+	{0.666666f, 0.666666f, 0.333333f, 0.333333f},  // Tile 4
+	{1.0f, 0.666666f, 0.666666f, 0.333333f},  // Tile 5
+	{0.333333f, 0.333333f, 0.0f, 0.0f},  // Tile 6
+	{0.666666f, 0.333333f, 0.333333f, 0.0f}   // Tile 7
 	};
 	int numberOfTiles = 8;
 	std::vector<glm::vec3> tilePositions;
 	std::vector<std::shared_ptr<GraphicsObject>> tilePointers(numberOfTiles);
 	GraphicsObject* tiles = new GraphicsObject[numberOfTiles];
 	std::shared_ptr<Texture> tileTexture = std::make_shared<Texture>();
-	tileTexture->LoadTextureDataFromFile("tile.jpg");
+
+	//Random puzzle image
+	LoadRandomImage(tileTexture, "puzzles");
+
 	float xOffset = -5.0f;
 	float yOffset = 15.0f;
 
@@ -334,12 +368,13 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		std::shuffle(tilePositions.begin(), tilePositions.end(), g);
 	}
 
+	//Generate tiles 0-7
 	for (int i = 0; i < numberOfTiles; i++) {
 		tilePointers[i] = std::make_shared<GraphicsObject>(tiles[i]);
 		std::shared_ptr<VertexBuffer> tileBuffer = Generate::Tile(5.0f, 5.0f, 0.1f, { 1.0f,1.0f,1.0f,1.0f }, texCoords[i]);
 		tileBuffer->SetTexture(tileTexture);
 		tilePointers[i]->SetVertexBuffer(tileBuffer);
-		tilePointers[i]->CreateBoundingBox(4.8f, 4.8f, 0.1f);
+		tilePointers[i]->CreateBoundingBox(5.0f, 5.0f, 0.1f);
 
 		std::shared_ptr<HighlightBehavior> highlightBehavior = std::make_shared<HighlightBehavior>();
 		highlightBehavior->SetObject(tilePointers[i]);
@@ -349,13 +384,13 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		tilePointers[i]->SetBoardPosition((unsigned int)tilePositions[i].x);
 	}
 
-	//Hidden tile
+	//Hidden tile (tile 8)
 	std::shared_ptr<GraphicsObject> tile8 = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> tile8Buffer = Generate::Tile(5.0f, 5.0f, 0.1f, { 1.0f,1.0f,1.0f,1.0f }, {1.0f, 0.333333, 0.666666f, 0.0f});
 	tile8Buffer->SetTexture(tileTexture);
 	tile8->SetVertexBuffer(tile8Buffer);
 	tile8->SetPosition(glm::vec3(0.0f, -10.0f, 0.0f));
-	tile8->CreateBoundingBox(4.8f, 4.8f, 0.1f);
+	tile8->CreateBoundingBox(5.0f, 5.0f, 0.1f);
 
 	std::shared_ptr<HighlightBehavior> highlightBehavior = std::make_shared<HighlightBehavior>();
 	highlightBehavior->SetObject(tile8);

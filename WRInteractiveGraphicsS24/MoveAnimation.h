@@ -6,8 +6,10 @@
 class MoveAnimation : public IAnimation
 {
 private:
-	bool isMoving = false;
+	//If the object has completed moving
 	bool isUpdated = false;
+
+	bool isMoving = false;
 	bool moveLock = false;
 	glm::vec3 direction;
 	float distanceToMove;
