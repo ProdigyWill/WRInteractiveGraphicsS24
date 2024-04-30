@@ -38,10 +38,12 @@ public:
 	glm::mat4& GetLocalReferenceFrame() { return referenceFrame; }
 	std::shared_ptr<IAnimation> GetAnimation() { return animation; }
 	inline int GetBoardPosition() { return boardPosition; }
+	inline int GetCorrectPosition() { return correctPosition; }
 	Material& GetMaterial() { return material; }
 	void CreateVertexBuffer(unsigned int numberOfElementsPerVertex);
 	void CreateIndexBuffer();
 	void SetBoardPosition(unsigned int boardPosition);
+	void SetCorrectPosition(unsigned int correctPosition);
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer);
 	void SetReferenceFrame(glm::mat4 referenceFrame);
 	void SetAnimation(std::shared_ptr<IAnimation> animation);

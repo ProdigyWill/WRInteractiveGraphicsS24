@@ -357,21 +357,9 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	tile8->SetPosition(glm::vec3(0.0f, -10.0f, 0.0f));
 	tile8->CreateBoundingBox(4.8f, 4.8f, 0.1f);
 
-	//Apple 
-	std::shared_ptr<Texture> appleTexture = std::make_shared<Texture>();
-	appleTexture->LoadTextureDataFromFile("apple.jpg");
-	std::shared_ptr<GraphicsObject> apple = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> appleBuffer = Generate::CuboidNorm(5.0f, 5.0f, 5.0f);
-	appleBuffer->SetTexture(appleTexture);
-	apple->SetVertexBuffer(appleBuffer);
-	apple->SetPosition(glm::vec3(22.5f, 0.0f, 22.5f));
-	apple->CreateBoundingBox(5.0f, 5.0f, 5.0f);
-
 	std::shared_ptr<HighlightBehavior> highlightBehavior = std::make_shared<HighlightBehavior>();
-	highlightBehavior->SetObject(apple);
-	apple->AddBehavior("highlight", highlightBehavior);
-
-
+	highlightBehavior->SetObject(tile8);
+	tile8->AddBehavior("highlight", highlightBehavior);
 
 	//Floor
 	std::shared_ptr<Texture> floorTexture = std::make_shared<Texture>();
@@ -387,7 +375,6 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	scene->AddObject(rWall);
 	scene->AddObject(tWall);
 	scene->AddObject(bWall);
-	scene->AddObject(apple);
 	scene->AddObject(floor);
 
 	objectManager->SetObject("board", board);
@@ -395,7 +382,6 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	objectManager->SetObject("rWall", lWall);
 	objectManager->SetObject("tWall", tWall);	
 	objectManager->SetObject("bWall", bWall);
-	objectManager->SetObject("apple", apple);
 	objectManager->SetObject("floor", floor);
 
 	std::stringstream ss;
@@ -404,6 +390,9 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		ss.str("");
 		ss << "tile" << i;
 		std::string tileName = ss.str();
+
+		tilePointers[i]->SetCorrectPosition(i+1);
+
 
 		// Add the tile to the scene
 		scene->AddObject(tilePointers[i]);

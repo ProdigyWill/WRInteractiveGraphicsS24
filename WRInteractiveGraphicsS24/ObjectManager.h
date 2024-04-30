@@ -11,6 +11,8 @@ private:
 
 public:
     bool CheckAnimation();
+    bool CheckIfSolved();
+    inline void SetEmptyPosition(unsigned int pos) { emptyPosition = pos; }
     inline unsigned int GetEmptyPosition() { return emptyPosition; }
     void SetObject(const std::string& name, std::shared_ptr<GraphicsObject> object);
     inline std::shared_ptr<GraphicsObject> GetObject(std::string name) { return objectsMap[name]; };

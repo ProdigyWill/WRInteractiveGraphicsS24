@@ -13,6 +13,20 @@ bool ObjectManager::CheckAnimation() {
     return false;
 }
 
+bool ObjectManager::CheckIfSolved()
+{
+    std::shared_ptr<GraphicsObject> currentTile = nullptr;
+    for (const auto& pair : objectsMap) {
+        if (pair.first.find("tile") != std::string::npos) {
+            currentTile = pair.second;
+            if (currentTile->GetBoardPosition() != currentTile->GetCorrectPosition()) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void ObjectManager::SetObject(const std::string& name, std::shared_ptr<GraphicsObject> object)
 {
 	objectsMap[name] = object;

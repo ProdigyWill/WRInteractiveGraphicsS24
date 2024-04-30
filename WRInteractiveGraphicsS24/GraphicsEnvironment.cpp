@@ -470,8 +470,6 @@ void GraphicsEnvironment::Run3D()
 		view = camera->LookForward();
 
 		HighlightParams hp = { {}, &mouseRay };
-		objectManager->GetObject("apple")->
-			SetBehaviorParameters("highlight", hp);
 		objectManager->GetObject("tile0")->
 			SetBehaviorParameters("highlight", hp);
 		objectManager->GetObject("tile1")->
@@ -514,6 +512,12 @@ void GraphicsEnvironment::Run3D()
 		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
 		ImGui::Text("Mouse: (%.0f, %.0f)", mouse.x, mouse.y);
 		ImGui::Text("Empty Position: (%.0u)", objectManager->GetEmptyPosition());
+		if (ImGui::Button("Check Solution")) {
+			if (objectManager->CheckIfSolved()) {
+				objectManager->SetEmptyPosition(99);
+				objectManager->GetObject("tile8")->SetPosition({ 5.0f, 5.0f, 0.2f });
+			}
+		}
 		ImGui::SliderFloat("Global Intensity", &globalLight.intensity, 0, 1);
 		ImGui::SliderFloat("Local Intensity", &localLight.intensity, 0, 1);
 		ImGui::DragFloat3("Local Light Position", &localLight.position.x);
