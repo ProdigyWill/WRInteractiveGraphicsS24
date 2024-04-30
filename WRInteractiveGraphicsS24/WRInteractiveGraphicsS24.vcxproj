@@ -201,11 +201,11 @@
     <None Include="texture.vert.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="apple.jpg" />
     <Image Include="crate.jpg" />
     <Image Include="floor.jpg" />
     <Image Include="lightbulb.png" />
     <Image Include="planet05.png" />
+    <Image Include="tile.jpg" />
     <Image Include="wood.jpg" />
   </ItemGroup>
   <ItemGroup>

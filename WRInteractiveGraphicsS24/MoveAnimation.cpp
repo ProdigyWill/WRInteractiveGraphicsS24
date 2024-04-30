@@ -45,6 +45,7 @@ bool MoveAnimation::CanMove() {
 	if (emptyPosition == 9) {
 		return pos == 6 || pos == 8;
 	}
+	return false;
 }
 
 void MoveAnimation::Update(double elapsedSeconds)

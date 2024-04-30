@@ -296,21 +296,21 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 
 	//Tiles
 	std::vector<glm::vec4> texCoords = {
-	{0.3f, 1.0f, 0.0f, 0.6f},  // Tile 1
-	{0.6f, 1.0f, 0.3f, 0.6f},  // Tile 2
-	{1.0f, 1.0f, 0.6f, 0.6f},  // Tile 3
-	{0.3f, 0.6f, 0.0f, 0.3f},  // Tile 4
-	{0.6f, 0.6f, 0.3f, 0.3f},  // Tile 5
-	{1.0f, 0.6f, 0.6f, 0.3f},  // Tile 6
-	{0.3f, 0.3f, 0.0f, 0.0f},  // Tile 7
-	{0.6f, 0.3f, 0.3f, 0.0f}   // Tile 8
+	{0.333333f, 1.0f, 0.0f, 0.666666f},  // Tile 1
+	{0.666666f, 1.0f, 0.333333f, 0.666666f},  // Tile 2
+	{1.0f, 1.0f, 0.666666f, 0.666666f},  // Tile 3
+	{0.333333f, 0.666666f, 0.0f, 0.333333f},  // Tile 4
+	{0.666666f, 0.666666f, 0.333333f, 0.333333f},  // Tile 5
+	{1.0f, 0.666666f, 0.666666f, 0.333333f},  // Tile 6
+	{0.333333f, 0.333333f, 0.0f, 0.0f},  // Tile 7
+	{0.666666f, 0.333333f, 0.333333f, 0.0f}   // Tile 8
 	};
 	int numberOfTiles = 8;
 	std::vector<glm::vec3> tilePositions;
 	std::vector<std::shared_ptr<GraphicsObject>> tilePointers(numberOfTiles);
 	GraphicsObject* tiles = new GraphicsObject[numberOfTiles];
 	std::shared_ptr<Texture> tileTexture = std::make_shared<Texture>();
-	tileTexture->LoadTextureDataFromFile("apple.jpg");
+	tileTexture->LoadTextureDataFromFile("tile.jpg");
 	float xOffset = -5.0f;
 	float yOffset = 15.0f;
 
@@ -346,12 +346,12 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 		tilePointers[i]->AddBehavior("highlight", highlightBehavior);
 
 		tilePointers[i]->SetPosition(glm::vec3(tilePositions[i].y, tilePositions[i].z, 0.2f));
-		tilePointers[i]->SetBoardPosition(tilePositions[i].x);
+		tilePointers[i]->SetBoardPosition((unsigned int)tilePositions[i].x);
 	}
 
 	//Hidden tile
 	std::shared_ptr<GraphicsObject> tile8 = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> tile8Buffer = Generate::Tile(5.0f, 5.0f, 0.1f, { 1.0f,1.0f,1.0f,1.0f }, {1.0f, 0.3, 0.6f, 0.0f});
+	std::shared_ptr<VertexBuffer> tile8Buffer = Generate::Tile(5.0f, 5.0f, 0.1f, { 1.0f,1.0f,1.0f,1.0f }, {1.0f, 0.333333, 0.666666f, 0.0f});
 	tile8Buffer->SetTexture(tileTexture);
 	tile8->SetVertexBuffer(tile8Buffer);
 	tile8->SetPosition(glm::vec3(0.0f, -10.0f, 0.0f));
