@@ -345,9 +345,9 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	//Random puzzle image
 	LoadRandomImage(tileTexture, "puzzles");
 
+	//Generate tile positions
 	float xOffset = -5.0f;
 	float yOffset = 15.0f;
-
 	for (int i = 0; i < numberOfTiles; i++) {
 		tilePositions.push_back(glm::vec3(i+1, xOffset, yOffset));
 
@@ -359,6 +359,8 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 			xOffset += 5.0f;
 		}
 	}
+
+	//Randomization of tile positions
 	std::random_device rd;
 	std::mt19937 g(rd());
 	std::shuffle(tilePositions.begin(), tilePositions.end(), g);
@@ -419,6 +421,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 	objectManager->SetObject("bWall", bWall);
 	objectManager->SetObject("floor", floor);
 
+	//Adding tiles to scene and obj manager
 	std::stringstream ss;
 	for (int i = 0; i < numberOfTiles; i++) {
 		// Get the name for the current tile
@@ -428,11 +431,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader, std::shared_ptr<Scene
 
 		tilePointers[i]->SetCorrectPosition(i+1);
 
-
-		// Add the tile to the scene
 		scene->AddObject(tilePointers[i]);
-
-		// Add the tile to the object manager using its name
 		objectManager->SetObject(tileName, tilePointers[i]);
 	}
 
