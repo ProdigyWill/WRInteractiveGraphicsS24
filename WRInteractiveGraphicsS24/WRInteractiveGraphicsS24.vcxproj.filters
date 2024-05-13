@@ -214,7 +214,10 @@
     <Image Include="lightbulb.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="apple.jpg">
+    <Image Include="wood.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="tile.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

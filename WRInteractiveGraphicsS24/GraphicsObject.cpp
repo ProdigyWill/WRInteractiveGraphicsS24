@@ -41,6 +41,16 @@ void GraphicsObject::CreateIndexBuffer()
 	indexBuffer = std::make_shared<IndexBuffer>();
 }
 
+void GraphicsObject::SetBoardPosition(unsigned int boardPosition) 
+{
+	this->boardPosition = boardPosition;
+}
+
+void GraphicsObject::SetCorrectPosition(unsigned int correctPosition)
+{
+	this->correctPosition = correctPosition;
+}
+
 void GraphicsObject::SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer)
 {
 	this->buffer = buffer;
